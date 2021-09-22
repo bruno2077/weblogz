@@ -1,9 +1,10 @@
+// Aqui são definidos os métodos de CRUD de usuário.
 
-const bcrypt = require('bcrypt') // isso serve pra criptografar a senha de usuário sempre que salvar/alterar um usuário.
+const bcrypt = require('bcrypt') 
 
 module.exports = app => {
 
-    const { existsOrError, equalsOrError, notExistsOrError } = app.api.validation    
+    const { existsOrError, equalsOrError, notExistsOrError } = app.api.validation
 
     // Função pra criptografar a senha
     const encryptPassword = password => {        
@@ -11,17 +12,38 @@ module.exports = app => {
         return bcrypt.hashSync(password, salt) // Este é o hash da senha. É retornado de forma síncrona, sem precisar de callback.
     }
 
-    // Função pra salvar ou alterar um usuário
-    // V.atual: Criação e alteração simples. Não tem nada de segurança, qq1 pode criar admin, alterar pra admin, alterar qq usuário.
+    // Função pra salvar ou alterar um usuário    
     const save = async (req, res) => {
         const user = { ...req.body }
+        
+        // impede que um usuário não logado ou um logado que não é admin crie ou altere usuário pra admin.
+        if(!req.user || !req.user.admin)
+            user.admin = false
+
+        // impede que um usuário tente alterar outro usuário pela url /home.
+        if(req.originalUrl.startsWith('/home')) {
+            try {
+                equalsOrError(req.user.id.toString(), user.id, 'Não autorizado! usuário não é o requerente.')
+            } catch(msg) {
+                res.status(401).send(msg)
+            }
+        }
+        // impede que um usuário logado crie um usuário pela URL /register
+        else if(req.originalUrl.startsWith('/register')) {
+            try {
+                notExistsOrError(req.user, 'Não autorizado! usuário já logado.')
+            } catch(msg) {
+                res.status(401).send(msg)
+            }
+        }       
+
         // Validações do preenchimento do formulário
         try {
-            existsOrError(user.name, 'Nome não informado')            
+            existsOrError(user.name, 'Nome não informado')
             existsOrError(user.email, 'E-mail não informado')
             existsOrError(user.password, 'Senha não informada')
             existsOrError(user.confirmPassword, 'Confirmação de senha não informada')
-            equalsOrError(user.password, user.confirmPassword, 'Senhas não conferem')            
+            equalsOrError(user.password, user.confirmPassword, 'Senhas não conferem')
         } catch(msg) {
             res.status(400).send(msg)
         }
@@ -33,14 +55,14 @@ module.exports = app => {
         const userByEmailFromDB = await app.db('users').where({email: user.email}).first()
 
         // Alteração de usuário já existente.
-        if(req.params.id) { 
-            user.id = req.params.id
+        if(req.params.id || req.originalUrl.startsWith('/home')) { 
+            user.id = req.params.id || req.user.id
             const userByIdFromDB = await app.db('users').where({id: user.id}).first()
             try {
                 existsOrError(userByIdFromDB, 'Usuário não existe!')
             } catch(msg) {
                 res.status(400).send(msg)
-            }           
+            }
 
             // Se alterou o email, este novo e-mail não pode já existir.
             if(user.email !== userByIdFromDB.email) {                
@@ -50,7 +72,7 @@ module.exports = app => {
                     res.status(400).send(msg)
                 }           
             }
-            // Finalmente altera usuário
+            // Finalmente altera usuário.
             app.db('users')
                 .update(user)
                 .where({ id: user.id })
@@ -74,13 +96,13 @@ module.exports = app => {
     // Consulta. Retorna todos os usuários sem paginação, ou retorna 1 usuário.
     const get = async (req, res) => {
         if(!req.params.id) {
-            const users = await app.db.select('id','name', 'email', 'avatar', 'admin').from('users').whereNull('deletedAt')            
+            const users = await app.db.select('id','name', 'email', 'avatar', 'admin').from('users').whereNull('deletedAt')          
             res.send(users)
         }
         else {
             const user = await app.db.select('id', 'name', 'email', 'avatar', 'admin').from('users').where({ id: req.params.id }).whereNull('deletedAt').first()
             try {
-                existsOrError(user, 'Usuário não existe!')            
+                existsOrError(user, 'Usuário não existe!')
             } catch(msg) {
                 res.status(400).send(msg)
             }
@@ -95,44 +117,27 @@ module.exports = app => {
             existsOrError(user, 'Usuário não existe!')
         } catch(msg) {
             res.status(400).send(msg) 
-        }
+        }        
         
-        // https://stackoverflow.com/questions/5129624/convert-js-date-time-to-mysql-datetime
-        // https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset
-        
-        
-        /* CHECKPOINT //
-        // Está funcionando (se por numa templatestring) mas falta por os minutos no serverTimeZone já que fuso-horário é de meia em meia hora.
-        // Outra coisa, é bom forçar 2 dígitos nesses campos, talvez tem função JS pronta ou faz na unha. */
-        const serverTimeZone = -(new Date().getTimezoneOffset() / 60) // FALTA OS MINUTOS. 
+        // Fuso horário do servidor
+        const serverTimeZone = -(new Date().getTimezoneOffset() / 60)
         const serverNow = new Date()
+
         // No SQL é pra ter este formato: "2012-08-24 14:00:00 +02:00"
         const nowInSQLTimestampType = `${serverNow.getFullYear()}-${serverNow.getMonth()+1}-${serverNow.getDate()} ${serverNow.getHours()}:${serverNow.getMinutes()}:${serverNow.getSeconds()} ${serverTimeZone}`
-        // console.log(`${serverNow.getFullYear()}-${serverNow.getMonth()+1}-${serverNow.getDate()} ${serverNow.getHours()}:${serverNow.getMinutes()}:${serverNow.getSeconds()} ${serverTimeZone}`)
-        
-        try{ 
-            // await app.db('users').where({id: req.params.id}).update({ deletedAt: "2012-08-24 14:00:00 +02:00" }) // ASSIM DEU CERTO! tem q botar a timezone quem sabe uns concat e tal.
+        // console.log(nowInSQLTimestampType)
+                
+        try {             
             await app.db('users').where({id: req.params.id}).update({ deletedAt: nowInSQLTimestampType }) 
         } catch(err) {
             res.status(500).send(err)
         }
         
-        // var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-        // var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1); // => '2015-01-26T06:40:36.181'
-        
         const testTimeSQL = await app.db('users').where({id: req.params.id}).select('deletedAt').first()
-        console.log(`${testTimeSQL.deletedAt}`)
+        // console.log(`${testTimeSQL.deletedAt}`)
         res.status(200).send(`deletado nesse horário: ${ testTimeSQL.deletedAt }`)
-    }
-
+    }    
     
-    // Penso em chamar essa depois de x dias/minutos após o soft delete... ai seria uma boa criar uma função de recuperação de conta, 
-    // seja num botão só pra isso e/ou numa tentativa de criar um user deletedAt e/ou tentar logar com user deletedAt.
-    // hmmm emails de confirmação? e recuperação de senha?! 
-    const hardDelete = (req, res) => {
 
-    }
-
-
-    return { save, get, softDelete, hardDelete }
+    return { save, get, softDelete }
 }

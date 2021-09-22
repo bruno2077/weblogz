@@ -60,6 +60,13 @@ yarn-error.log*
 node_modules/
 jspm_packages/
 
+#dependencies
+/.pnp
+.pnp.js
+
+# production
+/build
+
 # Optional npm cache directory
 .npm
 
@@ -77,6 +84,10 @@ jspm_packages/
 
 # dotenv environment variables file
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # next.js build output
 .next

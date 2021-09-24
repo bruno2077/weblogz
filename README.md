@@ -2,7 +2,7 @@
 **Status do Projeto: Em construção.**
 
 ## Descrição
-Weblogz é um blog com cadastro de usuários, artigos e categorias de artigos. No momento apenas a primeira versão do backend está pronta, o frontend está sendo feito em Reactjs.
+Weblogz é um blog com cadastro de usuários, artigos e categorias de artigos. No momento apenas a primeira versão do back-end está pronta, o CRUD de usuários já com a parte de autenticação e controle de acesso está pronta. No back-end falta o CRUD de categorias de artigos e de artigos. O front-end está sendo feito em Reactjs.
 
 ## Pré Requisitos
 Pra instalar todas as dependências, lidar com o banco de dados e executar o servidor é necessário ter o Node.js(v14.17.6), o npm(6.14.15) e o Postgresql (13.3) instalados na máquina as versões entre parêntesis foram as utilizadas no projeto. Pra conseguir testar o servidor é necessário uma API Client como o Postman ou Insomnia. O servidor roda na porta 3005.

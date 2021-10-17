@@ -6,8 +6,7 @@ import './Header.css'
 
 
 export default function Header(props) {
-
-    console.log("Header carregado")
+    //console.log("Header carregado")
      
     const buttons = []
     

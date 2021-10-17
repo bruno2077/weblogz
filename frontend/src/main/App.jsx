@@ -28,7 +28,8 @@ export default class App extends Component {
     
     // Sempre que monta o componente App verifica se o token no localStorage está válido. Se não tiver limpa os dados de usuário.
     componentDidMount() {
-        console.log("App Montado")
+        //console.log("App Montado")
+        
         // checa SE user no LS, se sim checa SE é válido
         // SE válido, setar este user no state aqui + adiciona token no axios header authorization.
         // Senão, remove LS, token no header, user no state e isLogged = false.

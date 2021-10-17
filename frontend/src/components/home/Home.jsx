@@ -69,11 +69,7 @@ export default class Home extends Component {
         }       
 
         axios.post(`${baseApiUrl}/login`, userToLogin)
-            .then(res => {                
-                // Armazena TODA a resposta no local storage (id, nome, token, etc.). Deve ser salvo como uma string.
-                // localStorage.setItem(userKey, JSON.stringify(res.data))
-                // Põe o token no header.
-                // axios.defaults.headers.common["Authorization"] = `bearer ${res.data.token}`    
+            .then(res => {
                 // Limpa os campos de senha e tira a flag de login
                 this.props.user.set(res.data)
                 this.setState({
@@ -85,7 +81,7 @@ export default class Home extends Component {
                     reLogging: false                    
                 })                
             })            
-            .catch((e) => { // Não é pra cair aqui já que o PUT precisa ir OK antes mas se der algum erro aqui desloga e redireciona pro /login.                
+            .catch((e) => { // Não é pra cair aqui já que o PUT precisa ir OK antes mas se der algum erro aqui desloga e redireciona pro /login.
                 this.props.user.set(false)
                 this.setState({ reLogging: false })
                 if(e.response)

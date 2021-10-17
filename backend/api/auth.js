@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt')
 const jwt = require('jwt-simple')
 
 module.exports = app => {
-
     // Trata a requisicao: Se tá preenchido, Se o email existe, Se a senha do email confere com o db SQL.
     // Cria o payload com 'emitido em' e 'expiração'.
     // Devolve pro front um objeto com o payload e o token de autenticação.
@@ -35,7 +34,7 @@ module.exports = app => {
             avatar: user.avatar,
             admin: user.admin,
             iat: TimeNow,
-            exp: TimeNow + (60 * 60 * 7) // tempo em segundos. 7 horas.
+            exp: TimeNow + (60 * 60 * 24) // tempo em segundos. 24hrs.
         }
 
         // devolve pro front um objeto com o payload e o token de autenticação

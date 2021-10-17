@@ -15,7 +15,7 @@ module.exports = app => {
 
     // A estratégia da autenticação. Usa aquele mesmo payload que criamos no login, o token no cabeçalho da requisição e a chave secreta.
     // obtém o usuário, chama o próximo middleware passando payload ou retorna falso se não tiver achado o usuário ou se tiver dado erro.
-    const strategy = new Strategy(params, (payload, done) => {
+    const strategy = new Strategy(params, (payload, done) => {        
         app.db('users')
             .where({ id: payload.id })
             .first()
@@ -27,7 +27,7 @@ module.exports = app => {
     passport.use(strategy)
 
     return {
-        // Exportamos este método. Usando o passport, faz a autenticação da requisição com a estratégia jwt e nenhum controle de sessão.
+        // Exportamos este método. Usando o passport, faz a autenticação da requisição com a estratégia jwt e nenhum controle de sessão.        
         authenticate: () => passport.authenticate('jwt', {session: false } )
     }
 }

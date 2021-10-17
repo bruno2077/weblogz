@@ -1,0 +1,7 @@
+section {
+    grid-area: Section;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px 0px 20px 0px;
+}

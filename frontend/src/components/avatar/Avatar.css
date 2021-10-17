@@ -1,0 +1,38 @@
+.avatar-area {
+    align-self: flex-end;
+    position: absolute; 
+    display: flex;
+    flex-direction: column;
+    align-items: center ;
+    padding: 2px 2px 0px 0px;
+
+    font-size: 0.8rem;
+}
+
+.avatar-area summary:hover {
+    cursor: pointer;
+}
+
+.avatar-area details {    
+    align-self: flex-start;
+
+}
+
+.avatar-area ul {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.avatar-area img {
+    width: 50px;
+    height: 50px;    
+    border: 1px solid #444;
+}
+
+.user-options {
+    background-color: lightblue;
+    position: absolute;
+    right: 2px;
+}
+

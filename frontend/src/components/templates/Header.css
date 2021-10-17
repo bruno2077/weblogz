@@ -1,0 +1,48 @@
+header {
+    background: linear-gradient(180deg, #D1D5EE, #EEF2FF);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-area: Header;    
+}
+
+.top-btns {
+    align-self: flex-end;
+    font-size: 0.7rem;    
+    padding: 2px;
+    margin-bottom: 10px;
+}
+.top-btns a {
+    text-decoration: none;    
+    color: #34345C;
+    padding-left: 10px;
+}
+
+.logo {    
+    border: 1px solid #b7c5d9;
+    
+    width: 240px;
+    height: 120px;    
+}
+
+header h1 {
+    font-family: Tahoma, sans-serif;
+    font-size: 2rem;  
+    margin-bottom: 0px;      
+}
+header h1 a, header h1 a:visited  {
+    text-decoration: none;
+    color: #af0a0f;
+}
+
+.protip {
+    display: block;
+    width: 80%;
+    padding: 0px 20% 25px 20%;
+
+    font-size: 0.65rem;
+    text-align: center;    
+    color: #800000;
+
+    border-bottom: 1px solid #b7c5d9;
+}

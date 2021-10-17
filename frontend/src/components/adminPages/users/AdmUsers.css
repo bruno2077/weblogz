@@ -1,0 +1,23 @@
+.user-update-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-update-form > * {
+    margin: 15px 0px 0px 0px;
+}
+
+
+.adm-tables td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+.adm-tables tbody tr:hover {
+    background-color: paleturquoise;
+}
+.adm-tables {
+    width: 80%;
+}
+.adm-theader{
+    background-color: lightskyblue;
+}

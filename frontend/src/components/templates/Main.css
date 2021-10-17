@@ -1,0 +1,14 @@
+main {
+    grid-area: Main;    
+    border-right: #b7c5d9 1px solid;
+}
+
+.articles {
+    align-self: flex-start;
+    padding: 15px;
+}
+
+article {
+    padding-top: 20px;
+}
+

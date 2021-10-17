@@ -1,0 +1,13 @@
+footer {
+    grid-area: Footer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.7rem;
+    margin-top: 30px;
+}
+
+footer span {
+    padding: 10px;
+}

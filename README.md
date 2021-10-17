@@ -2,12 +2,13 @@
 **Status do Projeto: Em construção.**
 
 ## Descrição
-Weblogz é um blog com cadastro de usuários, artigos e categorias de artigos. No momento apenas a primeira versão do back-end está pronta, o CRUD de usuários já com a parte de autenticação e controle de acesso está pronta. No back-end falta o CRUD de categorias de artigos e de artigos. O front-end está sendo feito em Reactjs.
+Weblogz é um blog com cadastro de usuários, artigos e categorias de artigos. No momento apenas o CRUD de usuários está pronto, incluindo a parte de autenticação e controle de acesso. Tanto no back-end quanto no front-end falta o CRUD de categorias de artigos e de artigos. No front-end falta ainda o estilo (CSS) final. O projeto está sendo desenvolvido com o Node e Express no back-end e React.js no Front-end.
 
 ## Pré Requisitos
-Pra instalar todas as dependências, lidar com o banco de dados e executar o servidor é necessário ter o Node.js(v14.17.6), o npm(6.14.15) e o Postgresql (13.3) instalados na máquina as versões entre parêntesis foram as utilizadas no projeto. Pra conseguir testar o servidor é necessário uma API Client como o Postman ou Insomnia. O servidor roda na porta 3005.
+Pra instalar todas as dependências, lidar com o banco de dados e executar o servidor back-end é necessário ter o Node.js(v14.17.6), o npm(6.14.15) e o Postgresql (13.3) instalados na máquina as versões entre parêntesis foram as utilizadas no projeto. O servidor roda na porta 3005. Para instalar e rodar o front-end é necessário o Node.js e o npm. O front-end roda na porta 3000.
 
 ## Instalação
+### Back-end
 Instalada todas as dependências e utilizando o SGBD Postgresql, para rodar o servidor basta seguir os passos abaixo mas com outros SGBDs como MySQL algumas alterações devem ser necessárias.
 
 Para rodar o servidor:
@@ -16,8 +17,11 @@ Para rodar o servidor:
 3- Renomeie o arquivo env_file para .env
 4- Pronto. No terminal dentro de /backend execute o comando *npm start* pra executar o servidor.
 
+### Front-end
+Com o Node.js e o npm instalados na máquina basta executar um 'npm install' no console/terminal que todas as dependências serão instaladas.
+
 ## Como usar
-Inicialmente devemos criar um usuário administrador diretamente no Postgresql pois pelo nosso servidor somente um usuário administrador tem permissão para criar um usuário administrador. O esquema do usuário é o seguinte:
+Inicialmente, no back-end devemos criar um usuário administrador diretamente no Postgresql pois pelo nosso servidor somente um usuário administrador tem permissão para criar um usuário administrador. O esquema do usuário é o seguinte:
 
 <pre> Coluna    |           Tipo           | Nullable |            Valor padrão
 -----------+--------------------------+-----------+----------+--------------------------
@@ -29,35 +33,24 @@ Inicialmente devemos criar um usuário administrador diretamente no Postgresql p
  admin     | boolean                  | not null | false
  deletedAt | timestamp with time zone |          |</pre>
 
-### Criar um usuário comum
-Utilizando uma API Client enviamos uma requisição POST na URL *localhost:3005/register* contendo name, email, password e confirmPassword no formato JSON. Mesmo que o campo admin seja passado e preenchido como true, o usuário será criado como comum.
+Criado um usuário administrador no back-end já podemos logar com ele no front-end e ter acesso a todo o site. O usuário administrador pode criar outros usuários administradores ou não, alterar seu próprio usuário, excluir qualquer usuário inclusive a si próprio mas é recomendado sempre ter ao menos um usuário administrador caso contrário só pelo SGBD será possível criar um usuário administrador. Pela URL pública de cadastro só são criados usuários comuns.
 
-### Logar como usuário comum ou administrador.
-Enviamos uma requisição do tipo POST na url *localhost:3005/login* contendo email e password no formato JSON. Se a requisição for bem sucedida é retornado um payload para o frontend contendo o token de autenticação, pra acessar as URLs de usuário logado devemos copiar este token, criar um cabeçalho chamado Authorization e colocar como valor "bearer **token**" sem aspas. Por padrão o token expira em 7 horas. 
+Usuários comuns tem acesso ao editor de texto (pra escrever os artigos futuramente) e a página /home que é onde eles podem editar seu próprio cadastro apenas.
 
-### Alterar o próprio usuário
-Já com o cabeçalho Authorization criado e preenchido com um token válido enviamos uma requisição do tipo PUT na URL /home contendo pelo menos name, email, password e confirmPassword. O campo avatar é opcional. Aqui o campo admin é ignorado, um usuário comum não consegue se alterar para administrador.
-
-### Consultar todos os usuários cadastrados e criar usuário pela área logada
-Caso o usuário esteja logado como administrador ele tem acesso a URL */users* essa URL aceita as seguintes requisições:
-- GET: Retorna todos os usuários na forma de um array de objetos no formato JSON.
-- POST: Cria um usuário podendo inclusive ser um usuário administrador.
-
-### Consultar, alterar e excluir um usuário
-Caso o usuário esteja logado como administrador ele tem acesso a URL /users/:id, onde *:id* é o ID de um usuário cadastrado. Essa URL aceita as seguintes requisições:
-- GET: Retorna o usuário no formato JSON.
-- PUT: Altera o usuário inclusive podendo fazer ser administrador.
-- DELETE: Faz um soft delete do usuário preenchendo a coluna *deletedAt* com a data da exclusão e assim sendo ignorado em todas as consultas. OBS: Na versão atual ainda não é possível recuperar um usuário deletado.
+Usuários administradores também tem acesso a página de administração de usuários onde é listado todos os usuários cadastrados e podem criar, alterar e deletar qualquer usuário incluindo a si próprios.
 
 ## Tecnologias
 As seguintes ferramentas foram usadas na construção do projeto:
 - VS Code
 - Postman
-- Javascript
-- Node.js
+- Node.js e npm
+- Javascript, HTML e CSS
 - Express
 - SQL/Knex/Postgresql
 - JSON Web Token
+- React.js
+- Draft Wysiwyg
+- React Router
 
 ## Autor
 Feito por Bruno Borges Gontijo, entre em contato.
@@ -66,4 +59,3 @@ Feito por Bruno Borges Gontijo, entre em contato.
 
 ## Licença
 MIT © [Bruno Borges Gontijo](https://bruno2077.github.io)
-

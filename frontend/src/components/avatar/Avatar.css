@@ -1,38 +1,41 @@
-.avatar-area {
-    align-self: flex-end;
-    position: absolute; 
-    display: flex;
-    flex-direction: column;
-    align-items: center ;
-    padding: 2px 2px 0px 0px;
+#avatar-area > a { /* Onde tá o username e userimg */
+    border-radius: 0;
+}
+#avatar-area:hover > a { 
+    background-color: #fff;
+    color: #202020;    
+}
+#avatar-area:hover .userimg {
+    border: 1px #202020 solid;
+}
+#avatar-area:hover .username {
+    color: #202020;
+}
 
+.username {    
     font-size: 0.8rem;
+    font-weight: 700;    
+    color: #fff;
 }
 
-.avatar-area summary:hover {
-    cursor: pointer;
+.userimg {
+    border: 1px #0001 solid;
+    border-radius: 5px;
+    height: 40px;
+    width: 40px;
 }
 
-.avatar-area details {    
-    align-self: flex-start;
-
+.user-option { /* itens do menu dropdown */   
+    display: inline-block;
+    width: 100%; 
+    height: 100%;
+    text-decoration: none;
+    color: #202020;
 }
-
-.avatar-area ul {
-    margin: 0px;
-    padding: 0px;
-    list-style: none;
+.user-option:hover {
+    color: #202020;
 }
-
-.avatar-area img {
-    width: 50px;
-    height: 50px;    
-    border: 1px solid #444;
+.user-option:active {
+    background-color: royalblue;
+    color: #fff;
 }
-
-.user-options {
-    background-color: lightblue;
-    position: absolute;
-    right: 2px;
-}
-

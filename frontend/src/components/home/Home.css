@@ -1,25 +1,4 @@
-.user-home {
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-}
-.user-home h3 {
-    align-self: center;
-}
-
-.user-info {
-    display: grid;    
-    grid-template-columns: fit-content(100%) 1fr;
-    row-gap: 10px;
-    margin: 8px 0px ;
-    font-size: 0.9rem;
-}
-.user-info label {
-    text-align: right;
-    padding-right: 8px;
-}
-
-.user-home button {
-    width: fit-content;
-    padding: 5px;
+.btns-area button a, .btns-area button a:hover {
+    text-decoration: none;
+    color: inherit;
 }

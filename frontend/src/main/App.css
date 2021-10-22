@@ -3,13 +3,10 @@
 }
 body {
     margin: 0;
-    background-color: #EEF2FF;
     font-family: arial, helvetica, sans-serif;
-    color: #34345C;        
+    background-color: #EEF2FF;
+    color: #34345C;
 }
-/* h1, h2, h3 {
-    color: #af0a0f;
-} */
 #root {
     display: grid;
     grid-template-areas: 
@@ -25,5 +22,5 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0px 0px 20px 0px;
+    margin: 20px 0px 20px 0px;
 }

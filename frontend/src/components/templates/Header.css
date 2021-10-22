@@ -1,48 +1,61 @@
-header {
-    background: linear-gradient(180deg, #D1D5EE, #EEF2FF);
+header {    
+    grid-area: Header;
     display: flex;
     flex-direction: column;
     align-items: center;
-    grid-area: Header;    
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.top-btns {
-    align-self: flex-end;
-    font-size: 0.7rem;    
-    padding: 2px;
-    margin-bottom: 10px;
-}
-.top-btns a {
-    text-decoration: none;    
-    color: #34345C;
-    padding-left: 10px;
+nav {
+    font-family: 'Open Sans', sans-serif;
 }
 
-.logo {    
-    border: 1px solid #b7c5d9;
-    
-    width: 240px;
-    height: 120px;    
+.top-btns { /* <li>. Carrega os Links na navbar. */
+    display: inline-block;
+    height: 100%;    
+    font-weight: 700;
+    font-size: 0.8rem;
+    /* margin-top: 20px 5px 0px 5px; */
 }
 
-header h1 {
-    font-family: Tahoma, sans-serif;
-    font-size: 2rem;  
+.top-btns a { /* Link. expande a area clicavel */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;      
+    height: 100%;  
+    padding: 0px 10px 0px 10px;
+    text-decoration: none;
+    color: #aaa;
+}
+.top-btns a:hover {    
+    color: #202020;
+    background-color: #fff;
+}
+
+.logo { /* Onde vem a figura de bg e o nome do site com a descrição */    
+    background-image: url("../../assets/img/memetica-bg2-2-2.jpg");
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    color: #fff;
+}
+.logo h1 {    
+    font-weight: 900;
+    font-size: 3rem;
     margin-bottom: 0px;      
 }
-header h1 a, header h1 a:visited  {
+.logo h1 a, .logo h1 a:visited  {
     text-decoration: none;
-    color: #af0a0f;
+    color: #fff;
 }
-
 .protip {
+    font-family: verdana, sans-serif;
+    font-size: 0.8rem;
     display: block;
-    width: 80%;
-    padding: 0px 20% 25px 20%;
-
-    font-size: 0.65rem;
+    max-width: 500px;
+    min-width: 400px;
     text-align: center;    
-    color: #800000;
-
-    border-bottom: 1px solid #b7c5d9;
 }

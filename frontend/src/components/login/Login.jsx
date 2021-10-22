@@ -93,23 +93,35 @@ export default class Login extends Component {
         // Controla se o formulário de login ou o formulário de registro é exibido. Isso vem lá do App.jsx
         const isRegister = this.props.login.register
 
-        fields.push(<input key="1" name="email" value={this.state.user.email} onChange={e => this.handleChange(e, e.target.name)} type="text" placeholder="E-mail"/>);
+        const pageTitle = isRegister ?  "Registrar" : "Login" 
+        const emailHelper = isRegister ? <div id="emailHelp" className="form-text">Nunca compartilharemos seu e-mail com ninguém. :)</div> : ""
+
+        fields.push(
+            <div key="1" className="mb-3">
+                <input name="email" className="form-control" value={this.state.user.email} onChange={e => this.handleChange(e, e.target.name)} type="text" placeholder="E-mail"/>
+                {emailHelper}
+            </div>
+        )
+            
         if(isRegister)
-            fields.push(<input key="2" name="name" value={this.state.user.name} type="text" onChange={e => this.handleChange(e, e.target.name)} placeholder="Nome"/>)
-        fields.push(<input key="3" name="password" value={this.state.user.password} type="password" onChange={e => this.handleChange(e, e.target.name)} placeholder="Senha"/>)
-        if(isRegister)
-            fields.push(<input key="4" name="confirmPassword" value={this.state.user.confirmPassword} type="password" onChange={e => this.handleChange(e, e.target.name)} placeholder="Confirme a senha"/>)        
-        fields.push(<button key="5" onClick={e => this.sendUser()}>Enviar</button>)        
+            fields.push(<input key="2" name="name" className="form-control mb-3" value={this.state.user.name} type="text" onChange={e => this.handleChange(e, e.target.name)} placeholder="Nome"/>)
+        fields.push(<input key="3" name="password" className="form-control mb-3" value={this.state.user.password} type="password" onChange={e => this.handleChange(e, e.target.name)} placeholder="Senha"/>)
+        if(isRegister)        
+            fields.push(<input key="4" name="confirmPassword" className="form-control mb-3" value={this.state.user.confirmPassword} type="password" onChange={e => this.handleChange(e, e.target.name)} placeholder="Confirme a senha"/>)
+        fields.push(<button key="5" className="btn btn-success me-3 " onClick={e => this.sendUser()}>Enviar</button>)        
         if(isRegister) {            
             fields.push(<span key="6">Já é registrado? clique <a href="#" onClick={ e => {e.preventDefault(); this.props.login.setReg(false)}} >aqui</a></span>)
         }
         else fields.push(<span key="7">Não é registrado? clique <a href="#"  onClick={ e => {e.preventDefault(); this.props.login.setReg(true)}} >aqui</a></span>)
 
 
-        return (        
-            <div className="login-form">                
-                {fields}                
-            </div>       
+        return (
+            <div>
+                <h2>{pageTitle}</h2>
+                <div className="login-form border rounded p-4">
+                    {fields}
+                </div>
+            </div>
         )
     }
 }

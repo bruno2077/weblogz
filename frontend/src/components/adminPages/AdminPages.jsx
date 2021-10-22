@@ -50,13 +50,13 @@ export default function AdminPages(props) {
 
     
     return (
-        <div className="adm-pages">
-            <h4>Administração</h4>
+        <div className="col-10" >
+            <h2>Administração</h2>
             <div className="adm-tabs">
-                <ul>
-                    <li> <Link to={`/admin/users`}>[Usuários]</Link> </li>
-                    <li> <Link to={`/admin/articles`}>[Artigos]</Link> </li>
-                    <li> <Link to={`/admin/categories`}>[Categorias]</Link> </li>                    
+                <ul className="nav nav-tabs">
+                    <li className="nav-item"> <Link className="nav-link" aria-selected="false" to={`/admin/users`}>[Usuários]</Link> </li>
+                    <li className="nav-item"> <Link className="nav-link active" aria-selected="true" to={`/admin/articles`}>[Artigos]</Link> </li>
+                    <li className="nav-item"> <Link className="nav-link" aria-selected="false" to={`/admin/categories`}>[Categorias]</Link> </li>                    
                 </ul>
             </div>
             <div>

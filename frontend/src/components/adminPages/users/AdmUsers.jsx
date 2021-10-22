@@ -238,7 +238,7 @@ export default class AdmUsers extends Component {
         for(let i in userTheadData) {
             userTheadField.push(<th key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>)
         }
-        let userThead = <thead><tr className="adm-theader">{userTheadField}</tr></thead>
+        let userThead = <thead className="table-primary"><tr className="adm-theader">{userTheadField}</tr></thead>
 
         // Cria um array de arrays com os values dos objetos. Cada item é uma linha, um user.
         const userTbodyData = []
@@ -255,8 +255,8 @@ export default class AdmUsers extends Component {
             userRows.push(<tr key={`${i}`} onClick={e => this.loadUser(e)}>{userField}</tr>)
             userField = []
         }
-        const userTbody = <tbody>{userRows}</tbody>
-        const userTheadTbody = <table className="adm-tables">{userThead}{userTbody}</table>
+        const userTbody = <tbody className="table-light">{userRows}</tbody>
+        const userTheadTbody = <table className="adm-tables table table-hover">{userThead}{userTbody}</table>
 
         this.setState({userTable: userTheadTbody})
     }

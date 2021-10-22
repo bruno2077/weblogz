@@ -1,26 +1,7 @@
-.login-form {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-}
-
-.login-form input {
-    display: block;
-    margin: 5px 0px;    
-    border: 1px solid #BBB;
-    border-radius: 5px;
-    width: 100%;
-    /* margin-bottom: 15px; */
-    padding: 3px 8px;
-    outline: none;
-}
-.login-form button {
-    width: fit-content;
-    margin-top: 5px;
-    padding: 5px;    
-}
-
-.login-form span {
-    margin-top: 20px;
+#emailHelp {
     font-size: 0.8rem;
+}
+
+.login-form {    
+    min-width: 400px;
 }

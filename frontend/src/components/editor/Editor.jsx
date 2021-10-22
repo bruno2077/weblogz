@@ -60,14 +60,22 @@ export default class EditorConvertToJSON extends Component {
         }
         
         return (
-            <div className="editor-container">
-                <Editor          
-                wrapperClassName="demo-wrapper"
-                editorClassName="demo-editor"
-                onContentStateChange={this.onContentStateChange}
-                readOnly
-                placeholder="See you space cowboy..."
-                />        
+            <div className="col-10">
+                <h2>Escreva um artigo</h2>
+                <div className="editor-container mb-3">
+                    <Editor          
+                    wrapperClassName="article-wrapper"
+                    editorClassName="article-editor"
+                    onContentStateChange={this.onContentStateChange}
+                    readOnly
+                    placeholder="See you space cowboy..."
+                    />
+                </div>  
+                
+                {/* <div className="text-end"> */}
+                <div className="">
+                    <button type="button" className="btn btn-outline-success">Salvar</button>
+                </div>          
             </div>
         );
     }

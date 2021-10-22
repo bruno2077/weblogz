@@ -51,6 +51,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - React.js
 - Draft Wysiwyg
 - React Router
+- Bootstrap
 
 ## Autor
 Feito por Bruno Borges Gontijo, entre em contato.

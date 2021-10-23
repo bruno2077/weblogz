@@ -3,7 +3,7 @@
 import { Link } from 'react-router-dom'
 import Avatar from '../avatar/Avatar'
 import './Header.css'
-import logo from '../../assets/img/logo_light.png'; 
+import logo from '../../assets/img/logo_light.png';
 
 
 export default function Header(props) {
@@ -20,7 +20,7 @@ export default function Header(props) {
 
     else {
         buttons.push(
-            <ul key="1" className="m-0 p-0 h-100">
+            <ul key="1" className="m-0 p-0 h-100 d-sm-block col-sm-auto d-flex justify-content-evenly col-12"> {/**displayar flex between se SM */}
                 <li className="top-btns "><Link to="/login" onClick={e => props.login.setRegister(false)} >Login</Link></li>
                 <li className="top-btns "><Link to="/login" onClick={e => props.login.setRegister(true)} >Registrar</Link></li>
             </ul>
@@ -29,8 +29,8 @@ export default function Header(props) {
 
     return (
         <header>
-            <nav className="navbar navbar-dark bg-dark w-100 m-0 p-0">               
-                <Link to="/" className="navbar-brand ms-4 py-1 "><img className="" src={logo} alt="Weblogz logo"></img></Link>               
+            <nav className="navbar navbar-dark bg-dark w-100 m-0 p-0 d-flex justify-content-sm-between justify-content-center">
+                <Link to="/" className="navbar-brand ms-4 py-1 d-none d-sm-block"><img src={logo} alt="Weblogz logo"></img></Link>
                 {buttons}
             </nav>
             <div className='logo'>

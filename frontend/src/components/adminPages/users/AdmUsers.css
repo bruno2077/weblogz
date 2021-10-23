@@ -1,23 +1,13 @@
-.user-update-form {
+.admSelect {
     display: flex;
-    flex-direction: column;
+    align-items:center;
 }
 
-.user-update-form > * {
-    margin: 15px 0px 0px 0px;
+.tTitle {
+    font-size: 1.1rem;
+    color: black;
 }
 
-
-/* .adm-tables td {
-    padding: 8px;
-    border: 1px solid #ddd;
+.trSelected {
+    background-color: cornflowerblue;
 }
-.adm-tables tbody tr:hover {
-    background-color: paleturquoise;
-}
-.adm-tables {
-    width: 80%;
-}
-.adm-theader{
-    background-color: lightskyblue;
-} */

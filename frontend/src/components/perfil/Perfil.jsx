@@ -1,13 +1,13 @@
-// Home do usuário. Só aparece pra usuário logado.
+// Perfil do usuário. Só aparece pra usuário logado.
 
-import './Home.css'
+import './Perfil.css'
 import { Redirect } from 'react-router'
 import { baseApiUrl, isValidToken } from '../../global'
 import { Component } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
-export default class Home extends Component {
+export default class Perfil extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -26,7 +26,7 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        console.log("Home montado")
+        console.log("Perfil montado")
 
         if (this.props.user.get) {
             const verifyToken = new Promise(resolve => {
@@ -121,7 +121,7 @@ export default class Home extends Component {
             return <span>carregando.gif</span>
 
         return (
-            <div className="">
+            <div className="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
                 <h2>Dados do usuário</h2>
                 <p>Preencha todos os campos abaixo para alterar seus dados.</p>
 

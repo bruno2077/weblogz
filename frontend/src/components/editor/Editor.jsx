@@ -60,7 +60,7 @@ export default class EditorConvertToJSON extends Component {
         }
         
         return (
-            <div className="col-10">
+            <div className="col-md-10  col-12">
                 <h2>Escreva um artigo</h2>
                 <div className="editor-container mb-3">
                     <Editor          

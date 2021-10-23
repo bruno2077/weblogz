@@ -8,6 +8,15 @@ header {
 
 nav {
     font-family: 'Open Sans', sans-serif;
+    height: 55px;
+}
+
+.dropdown-toggle::after { /* A seta ao lado da img do avatar */
+    color: #fff;
+    font-size: 1.2rem;
+}
+.dropdown-toggle:hover::after {
+    color: #000;
 }
 
 .top-btns { /* <li>. Carrega os Links na navbar. */
@@ -54,8 +63,6 @@ nav {
 .protip {
     font-family: verdana, sans-serif;
     font-size: 0.8rem;
-    display: block;
-    max-width: 500px;
-    min-width: 400px;
+    display: block;    
     text-align: center;    
 }

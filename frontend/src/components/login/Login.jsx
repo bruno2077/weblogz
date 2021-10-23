@@ -94,7 +94,7 @@ export default class Login extends Component {
         const isRegister = this.props.login.register
 
         const pageTitle = isRegister ?  "Registrar" : "Login" 
-        const emailHelper = isRegister ? <div id="emailHelp" className="form-text">Nunca compartilharemos seu e-mail com ninguém. :)</div> : ""
+        const emailHelper = isRegister ? <div id="emailHelp" className="form-text">Nunca compartilharemos seu e-mail com ninguém. <i class="far fa-smile fa-lg"></i></div> : ""
 
         fields.push(
             <div key="1" className="mb-3">
@@ -116,9 +116,9 @@ export default class Login extends Component {
 
 
         return (
-            <div>
+            <div className="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
                 <h2>{pageTitle}</h2>
-                <div className="login-form border rounded p-4">
+                <div className="border rounded p-4">
                     {fields}
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import { Switch, Route, Redirect, useParams } from "react-router"
 import Login from '../components/login/Login'
-import Home from "../components/home/Home"
+import Perfil from "../components/perfil/Perfil"
 import Slate from "../components/editor/Editor";
 import AdminPages from "../components/adminPages/AdminPages";
 
@@ -25,8 +25,8 @@ const Routes = props => {
                     <Login login={{...props.login}} user={{...props.user}}/>
                 </Route>
 
-                <Route exact path='/home'>
-                    <Home user={props.user} />
+                <Route exact path='/perfil'>
+                    <Perfil user={props.user} />
                 </Route>
                 
                 <Route exact path='/admin'> 

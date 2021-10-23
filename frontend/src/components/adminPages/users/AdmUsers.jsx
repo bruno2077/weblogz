@@ -7,6 +7,20 @@ import {baseApiUrl } from '../../../global'
 import { Redirect } from 'react-router'
 
 
+// Destaca a linha selecionada da tabela ou limpa o destaque.
+function selectedRowToggler(tr) {
+    const rows = document.getElementsByClassName("userRow")  
+    if(rows.length) {
+        for(let i of rows ) {
+            i.classList.remove("table-primary")                   
+        }    
+        if(tr) {
+            tr.classList.add("table-primary")
+        }
+    }
+}
+
+
 const initialState = {
     user: {
         id: null,
@@ -55,7 +69,7 @@ export default class AdmUsers extends Component {
         })
     }
 
-    // força valor numérico, booleano e null onde deve ser.
+    // força valor numérico, booleano e null onde deve ser. Usado pra enviar usuário pro backend
     controlTypes(obj) {
         const foo = obj
         if(obj.id)
@@ -128,9 +142,9 @@ export default class AdmUsers extends Component {
             userToSend.id = this.state.user.id
             axios.put(`${baseApiUrl}/users/${userToSend.id}`, userToSend)
                 .then(res => {
-                    alert(res.data) // Responde que alterou o usuário.
+                    alert(res.data) // Responde que alterou o usuário.                    
                     // Se o admin alterou seu próprio usuário, reloga e restart().                    
-                    if(this.props.user.get.id == userToSend.id)
+                    if(this.props.user.get.id === userToSend.id)
                         this.reLogin()
                     else this.restart(true)
                 })
@@ -172,7 +186,9 @@ export default class AdmUsers extends Component {
             .then(res => {
                 alert(res.data) // Responde que deletou o usuário
                 // Se o admin se excluiu, desloga e redireciona.
-                if(this.props.user.get.id == this.state.user.id) {
+                console.log(typeof parseInt(this.state.user.id), this.state.user.id) // string
+                console.log(typeof this.props.user.get.id, this.props.user.get.id) //number
+                if(this.props.user.get.id === parseInt(this.state.user.id)) {
                     this.props.user.set(false)
                     this.setState({ toLogin: true })
                 }
@@ -225,7 +241,8 @@ export default class AdmUsers extends Component {
             isUserLoaded: true,
             isNewUser: false
         })
-        // Aqui da pra rodar uma função pra destacar o user selecionado na tabela. O botão [descartar] ou o restart() pode chamar outra q limpa o estilo.
+        // Função pra destacar o usuário selecionado da tabela        
+        selectedRowToggler(e.currentTarget)
     }
 
     // Pega a resposta do backend contendo um array de usuários e transforma isso numa tabela de usuários.
@@ -238,7 +255,7 @@ export default class AdmUsers extends Component {
         for(let i in userTheadData) {
             userTheadField.push(<th key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>)
         }
-        let userThead = <thead className="table-primary"><tr className="adm-theader">{userTheadField}</tr></thead>
+        let userThead = <thead className="table-primary"><tr className="">{userTheadField}</tr></thead>
 
         // Cria um array de arrays com os values dos objetos. Cada item é uma linha, um user.
         const userTbodyData = []
@@ -252,11 +269,16 @@ export default class AdmUsers extends Component {
             for(let x in userTbodyData[i]) {
                 userField.push(<td key={`${i},${x}`}>{`${userTbodyData[i][x]}`}</td>)
             }
-            userRows.push(<tr key={`${i}`} onClick={e => this.loadUser(e)}>{userField}</tr>)
+            userRows.push(<tr className="userRow" key={`${i}`} onClick={e => this.loadUser(e)}>{userField}</tr>)
             userField = []
         }
         const userTbody = <tbody className="table-light">{userRows}</tbody>
-        const userTheadTbody = <table className="adm-tables table table-hover">{userThead}{userTbody}</table>
+        const userTheadTbody = 
+            <table className="table table-hover caption-top mt-4">
+                <caption className="tTitle text-center" >Tabela de usuários</caption>    
+                {userThead} 
+                {userTbody}
+            </table>
 
         this.setState({userTable: userTheadTbody})
     }
@@ -277,13 +299,13 @@ export default class AdmUsers extends Component {
         // usuário carregado e não é user novo: mostra o campo ID e o botão [deletar] no form.
         if( this.state.isUserLoaded && !this.state.isNewUser ) {
             showId = <p>ID: <span>{this.state.user.id}</span></p>
-            btnDel = <button onClick={e => this.deleteUser()}>Deletar usuário</button>
+            btnDel = <button className="btn btn-danger my-2" onClick={e => this.deleteUser()}>Deletar usuário</button>
         }
 
         // Usuário não carregado: aparece só o botão de novo usuário, não aparece o form.
         if( !this.state.isUserLoaded ) {
             // onClick marca q é inclusão e não alteração de user e que tem usuário carregado oq exibe o form.
-            btnNewUser = <button onClick={e => this.setState({ isNewUser: true, isUserLoaded: true})}>Novo usuário</button>
+            btnNewUser = <button className="btn btn-primary my-2" onClick={e => this.setState({ isNewUser: true, isUserLoaded: true})}>Novo usuário</button>
         }
         // Usuário carregado: mostra o form seja com os dados do usuário OU vazio se Novo usuário.
         else {            
@@ -291,34 +313,56 @@ export default class AdmUsers extends Component {
                 formTitle = "Alterar usuário"
 
             showForm = (
-                <div className='user-update-form'>
+                <div className='col-12 col-lg-10'>
                     <h4>{formTitle}</h4>
                     {showId}
-                    <input name="email" onChange={e => this.handleChange(e, e.target.name)} value={this.state.user.email} type="text" placeholder="E-mail"/>
-                    <input name="name"  onChange={e => this.handleChange(e, e.target.name)} value={this.state.user.name} type="text" placeholder="Nome"/>
-                    <div>
-                        <label htmlFor="admin">Administrador:</label>
-                        <select name="admin" value={this.state.user.admin} onChange={e => this.handleChange(e, e.target.name)} >
-                            <option value="false">Não</option>
-                            <option value="true">Sim</option>
-                        </select>
+
+                    {/* Se admin */}
+                    <div className="row gy-1 gx-1 my-2 admSelect">
+                        <div className="">
+                            <label className="form-label" htmlFor="admin">Administrador: </label>
+                        </div>                        
+                        <div className="col-auto">
+                            <select className="form-select" aria-label="Se usuário é administrador"name="admin" value={this.state.user.admin} onChange={e => this.handleChange(e, e.target.name)} >
+                                <option value="false">Não</option>
+                                <option value="true">Sim</option>
+                            </select>
+                        </div>
                     </div>
-                    <input name="password" onChange={e => this.handleChange(e, e.target.name)} type="password" placeholder="Senha"/>
-                    <input name="confirmPassword" onChange={e => this.handleChange(e, e.target.name)} type="password" placeholder="Confirme a senha"/>
-                    <div className='adm-user-btns'>
-                        <button onClick={e => this.sendUser()}>Salvar</button>
-                        <button onClick={e => this.restart(false)}>Descartar</button>
+
+                    {/* Email e nome */}
+                    <div className="row gy-2 gx-2 my-2">
+                        <div className="col-md-5 col-sm-6">
+                            <input className="form-control" type="email" name="email" onChange={e => this.handleChange(e, e.target.name)} value={this.state.user.email}  placeholder="E-mail" id="inputEmail" aria-describedby="inputEmail"/>
+                        </div>
+                        <div className="col-md-5 col-sm-6">
+                            <input className="form-control" type="text" name="name"  onChange={e => this.handleChange(e, e.target.name)} value={this.state.user.name}  placeholder="Nome" id="inputName" aria-describedby="inputName"/>
+                        </div>
+                    </div>             
+                    
+                    {/* Senha e confirmação de senha */}
+                    <div className="row gy-2 gx-2 my-2">
+                        <div className="col-md-5 col-sm-6">
+                            <input className="form-control" name="password" onChange={e => this.handleChange(e, e.target.name)} type="password" placeholder="Senha" id="inputPassword" aria-describedby="inputPassword" />
+                        </div>
+                        <div className="col-md-5 col-sm-6">
+                            <input className="form-control" name="confirmPassword" onChange={e => this.handleChange(e, e.target.name)} type="password" placeholder="Confirme a senha" id="inputConfirmPassword" aria-describedby="inputConfirmPassword"/>
+                        </div>
+                    </div>   
+                    
+                    <div>
+                        <button className="btn btn-primary my-2 me-2" onClick={e => this.sendUser()}>Salvar</button>
+                        <button className="btn btn-dark my-2 me-2" onClick={e => { this.restart(false); selectedRowToggler(false); }}>Descartar</button>
                         {btnDel}
                     </div>
                 </div>
-            )
+            )            
         }
         
         return (
-            <div className="adm-user">                
+            <div>             
                 {btnNewUser}
-                {showForm}
-                
+                {showForm}                
                 {this.state.userTable}
             </div>
         )

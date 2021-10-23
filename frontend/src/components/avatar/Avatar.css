@@ -13,10 +13,13 @@
 }
 
 .username {    
+    display: inline-block;
     font-size: 0.8rem;
     font-weight: 700;    
-    color: #fff;
+    color: #fff;    
+    max-width: 150px;
 }
+
 
 .userimg {
     border: 1px #0001 solid;

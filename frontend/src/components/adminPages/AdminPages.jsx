@@ -2,10 +2,42 @@
 
 import './AdminPages.css'
 import AdmUsers from "./users/AdmUsers";
-import { Link, Redirect, useParams} from 'react-router-dom';
+import { Link, Redirect} from 'react-router-dom';
 import Articles from './articles/AdmArticles';
 import Categories from './categories/AdmCategories';
 import { useEffect } from 'react';
+
+
+// Lida com a aparência das abas conforme a página que está renderizada.
+function tabToggler(ev, page) {
+    const tabs = document.getElementsByClassName("admtab")    
+    if(tabs.length) {
+        for(let i of tabs ) {
+            i.classList.remove("active")
+            i.setAttribute("aria-selected", "false")            
+        }
+        // onclick nas tabs
+        if(ev) {
+            ev.target.setAttribute("aria-selected", "true")
+            ev.target.classList.add("active")
+        }
+        // on mount de admPages: coloca o estilo na tab certa quando carregar a url
+        else {
+            let index = null
+            if(page === undefined || page === "users")
+                index = 0
+            else if(page === "articles" ) 
+                index = 1
+            else if(page === "categories" ) 
+                index = 2
+
+            if(index !== null) {
+                tabs[index].classList.add("active")
+                tabs[index].setAttribute("aria-selected", "true")
+            }
+        }
+    }
+}
 
 
 export default function AdminPages(props) {
@@ -13,7 +45,8 @@ export default function AdminPages(props) {
     useEffect( () => {
         // roda quando monta
         //console.log("admPages carregado")
-        if(props.mainContent.get)
+        tabToggler(null, props.page)
+        if(props.mainContent.get) 
             props.mainContent.set(false)
           
         // roda quando desmonta
@@ -50,13 +83,13 @@ export default function AdminPages(props) {
 
     
     return (
-        <div className="col-10" >
+        <div className="col-12 col-sm-10" >
             <h2>Administração</h2>
-            <div className="adm-tabs">
+            <div className="mb-4">
                 <ul className="nav nav-tabs">
-                    <li className="nav-item"> <Link className="nav-link" aria-selected="false" to={`/admin/users`}>[Usuários]</Link> </li>
-                    <li className="nav-item"> <Link className="nav-link active" aria-selected="true" to={`/admin/articles`}>[Artigos]</Link> </li>
-                    <li className="nav-item"> <Link className="nav-link" aria-selected="false" to={`/admin/categories`}>[Categorias]</Link> </li>                    
+                    <li className="nav-item"><Link onClick={e => tabToggler(e)} className="admtab nav-link" aria-selected="false" to={`/admin/users`}>Usuários</Link></li>
+                    <li className="nav-item"><Link onClick={e => tabToggler(e)} className="admtab nav-link" aria-selected="false" to={`/admin/articles`}>Artigos</Link></li>
+                    <li className="nav-item"><Link onClick={e => tabToggler(e)} className="admtab nav-link" aria-selected="false" to={`/admin/categories`}>Categorias</Link></li>                    
                 </ul>
             </div>
             <div>

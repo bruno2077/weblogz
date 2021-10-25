@@ -43,7 +43,8 @@ const initialState = {
 
 export default class AdmUsers extends Component {
     constructor(props) {
-        super(props)
+        super(props)      
+        let imgDoInput  
         this.state = {
             ...initialState
         }
@@ -185,9 +186,7 @@ export default class AdmUsers extends Component {
         axios.delete(`${baseApiUrl}/users/${this.state.user.id}`, this.state.user)
             .then(res => {
                 alert(res.data) // Responde que deletou o usuário
-                // Se o admin se excluiu, desloga e redireciona.
-                console.log(typeof parseInt(this.state.user.id), this.state.user.id) // string
-                console.log(typeof this.props.user.get.id, this.props.user.get.id) //number
+                // Se o admin se excluiu, desloga e redireciona.                
                 if(this.props.user.get.id === parseInt(this.state.user.id)) {
                     this.props.user.set(false)
                     this.setState({ toLogin: true })
@@ -232,42 +231,95 @@ export default class AdmUsers extends Component {
         this.setState({
             user: {
                 ...this.state.user,
-                id: userData[0],
+                avatar: userData[0] === "defImg" ? null : userData[0],
                 name: userData[1],
                 email: userData[2],
-                avatar: userData[3],
-                admin: userData[4]
+                admin: userData[3] === "true" ? true : false,
+                id: parseInt(userData[4])
             },
             isUserLoaded: true,
             isNewUser: false
-        })
+        })        
         // Função pra destacar o usuário selecionado da tabela        
         selectedRowToggler(e.currentTarget)
     }
 
     // Pega a resposta do backend contendo um array de usuários e transforma isso numa tabela de usuários.
     usersToTable() {
-        // Cria um array com os nomes das colunas.
-        let userTheadData = Object.keys(this.state.users[0])
-        // Monta o o cabeçalho da tabela.
-        const labels = ["Código", "Nome", "E-mail", "Avatar", "Administrador"]
+        // Cria um array com os [name=] das colunas do <thead>.
+        const rawUserTheadData = Object.keys(this.state.users[0]) // ['id', 'name', 'email', 'avatar', 'admin']
+        
+        // Organiza as colunas que vão pro cabeçalho da cabeçalho
+        const userTheadData = [] // ['avatar', 'name', 'email', 'admin', 'id':hidden]
+        for(let i in rawUserTheadData) {
+            switch(rawUserTheadData[i]) {
+                case "avatar":
+                    userTheadData[0] = rawUserTheadData[i]
+                    break
+                case "name":
+                    userTheadData[1] = rawUserTheadData[i]
+                    break
+                case "email":
+                    userTheadData[2] = rawUserTheadData[i]
+                    break
+                case "admin":
+                    userTheadData[3] = rawUserTheadData[i]
+                    break
+                case "id":
+                    userTheadData[4] = rawUserTheadData[i]
+                    break
+                default: break
+            }
+        }        
+        // Cria um array com os [value=] das colunas do <thead>. 
+        const labels = ["Avatar", "Nome", "E-mail", "Administrador", "ID"]            
+
+        // Monta o cabeçalho da tabela.
         const userTheadField = []
         for(let i in userTheadData) {
-            userTheadField.push(<th key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>)
+            if (i < (labels.length-1) )
+                userTheadField.push(<th key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>)
+            else userTheadField.push(<th className="d-none" key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>)
         }
-        let userThead = <thead className="table-primary"><tr className="">{userTheadField}</tr></thead>
+        let userThead = <thead className="table-primary"><tr>{userTheadField}</tr></thead>
 
-        // Cria um array de arrays com os values dos objetos. Cada item é uma linha, um user.
-        const userTbodyData = []
-        for(let i in this.state.users) {
-            userTbodyData.push(Object.values(this.state.users[i]))
-        }
-        // Monta o corpo da tabela.
+
+        // Cria um array de arrays com os values dos objetos. Cada item é uma linha, um user.        
+        let userTbodyData = []
+        let oneUser        
+        this.state.users.forEach( obj => {       
+            oneUser = []
+            for (let attribKey in obj ) {                  
+                switch(attribKey) {
+                    case "avatar":
+                        oneUser[0] = obj[attribKey] === null ? "DefImg" : obj[attribKey]
+                        break
+                    case "name":
+                        oneUser[1] = `${obj[attribKey]}`
+                        break
+                    case "email":
+                        oneUser[2] = `${obj[attribKey]}`
+                        break
+                    case "admin":
+                        oneUser[3] = obj[attribKey] === true ? "Sim" : "Não" 
+                        break
+                    case "id":
+                        oneUser[4] = `${obj[attribKey]}`
+                        break
+                    default: break
+                }                
+            }
+            userTbodyData.push(oneUser)            
+        });
+       
+        // Monta o corpo da tabela. A coluna de ID é escondida, ela é usada só pra lidar com os dados do usuário.
         const userRows = []
         let userField = []
         for(let i in userTbodyData) {
             for(let x in userTbodyData[i]) {
-                userField.push(<td key={`${i},${x}`}>{`${userTbodyData[i][x]}`}</td>)
+                if(x < (userTbodyData[i].length-1) )
+                    userField.push(<td key={`${i},${x}`}>{`${userTbodyData[i][x]}`}</td>)
+                else userField.push(<td className="d-none" key={`${i},${x}`}>{`${userTbodyData[i][x]}`}</td>)
             }
             userRows.push(<tr className="userRow" key={`${i}`} onClick={e => this.loadUser(e)}>{userField}</tr>)
             userField = []
@@ -284,6 +336,53 @@ export default class AdmUsers extends Component {
     }
 
     
+    // Redimensiona a imagem que vier pra no max 100x100
+    imgHandler(ev) {
+        console.log(ev.target.files[0].name)        
+
+        var file = ev.target.files[0];
+        if(file) { 
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(e) {
+                // var img = document.getElementById('image_preview');
+                // img.setAttribute('src', e.target.result);
+                var img = new Image();
+                img.src = e.target.result; // imagem normal.
+                console.log(img.height, img.width)      
+                var canvas = document.createElement("canvas");
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+
+                var MAX_WIDTH = 100;
+                var MAX_HEIGHT = 100;
+                var width = img.width;
+                var height = img.height;
+                console.log(width, height)
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+
+                let dataurl = canvas.toDataURL(file.type);
+                document.getElementById('output').src = dataurl;
+            }
+         //   reader.readAsDataURL(file);
+        }
+    }    
+
     render() {
         // Se o admin se deletou OU se o admin se alterou e não conseguiu relogar OU se não tá logado OU se user logado não é admin. 
         if(this.state.toLogin || !this.props.user.get)
@@ -348,8 +447,13 @@ export default class AdmUsers extends Component {
                         <div className="col-md-5 col-sm-6">
                             <input className="form-control" name="confirmPassword" onChange={e => this.handleChange(e, e.target.name)} type="password" placeholder="Confirme a senha" id="inputConfirmPassword" aria-describedby="inputConfirmPassword"/>
                         </div>
-                    </div>   
-                    
+                    </div>  
+
+                    <input type="file"
+                        id="avatar" name="avatar"
+                        accept="image/png, image/jpeg"
+                        onChange={e => this.imgHandler(e)} />
+
                     <div>
                         <button className="btn btn-primary my-2 me-2" onClick={e => this.sendUser()}>Salvar</button>
                         <button className="btn btn-dark my-2 me-2" onClick={e => { this.restart(false); selectedRowToggler(false); }}>Descartar</button>
@@ -364,6 +468,10 @@ export default class AdmUsers extends Component {
                 {btnNewUser}
                 {showForm}                
                 {this.state.userTable}
+                
+                {/* Testando File Reader */}
+                <img id="image_preview"/>                
+                <img id="output"/>                
             </div>
         )
     }

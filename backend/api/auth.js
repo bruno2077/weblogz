@@ -13,16 +13,16 @@ module.exports = app => {
     const login = async (req, res) => {
         // Trata a requisicao: Se tá preenchido, Se o email existe, Se a senha do email confere com o db SQL.
         if(!req.body.email || !req.body.password)
-            res.status(400).send('E-mail e/ou senha faltando.')
+            return res.status(400).send('E-mail e/ou senha faltando.')
         
-        const user = await app.db('users').where({email: req.body.email}).whereNull('deletedAt').first()        
+        const user = await app.db('users').where({email: req.body.email}).whereNull('deletedAt').first()
         if(user) {
             const isPassMatch = bcrypt.compareSync(req.body.password, user.password)
             if(!isPassMatch) {            
-                res.status(400).send('E-mail e/ou senha inválidos.')                
+                return res.status(400).send('E-mail e/ou senha inválidos.')                
             }
         }
-        else res.status(400).send('E-mail e/ou senha inválidos.')
+        else return res.status(400).send('E-mail e/ou senha inválidos.')
 
         const TimeNow = Math.floor(Date.now() / 1000)
 
@@ -31,19 +31,21 @@ module.exports = app => {
             id: user.id,
             name: user.name,
             email: user.email,
-            avatar: user.avatar,
+            //avatar: user.avatar,
             admin: user.admin,
             iat: TimeNow,
             exp: TimeNow + (60 * 60 * 24) // tempo em segundos. 24hrs.
         }
 
-        // devolve pro front um objeto com o payload e o token de autenticação
-        res.json({ ...payload, token: jwt.encode(payload, authSecret) })
+        const avatar = user.avatar ? user.avatar.toString() : ""
+        // devolve pro front um objeto com o payload, o token de autenticação e o avatar 
+        // return res.json({ ...payload, token: jwt.encode(payload, authSecret)})
+        return res.json({ payload, token: jwt.encode(payload, authSecret), avatar })
     }
 
 
     // Middleware que verifica se o token é válido ou não, retorna true (token válido) ou false (token inválido).
-    const validateToken = async (req, res) => {
+    const validateToken = async (req, res) => { // Agora recebe os dados sem o campo avatar. 
         const userData = req.body || null
         try {
             if(userData && userData.token) {                
@@ -53,7 +55,7 @@ module.exports = app => {
                 }            
             }
         } catch(err) { 
-            // problema com o token
+            // problema com o token         
         }
         return res.send(false)
     }

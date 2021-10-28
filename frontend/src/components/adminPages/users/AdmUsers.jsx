@@ -5,6 +5,7 @@ import './AdmUsers.css'
 import axios from 'axios';
 import {baseApiUrl } from '../../../global'
 import { Redirect } from 'react-router'
+import AvatarEditor from "../../avatarEditor/AvatarEditor";
 
 
 // Destaca a linha selecionada da tabela ou limpa o destaque.
@@ -37,16 +38,18 @@ const initialState = {
     isUserLoaded: false,
     isNewUser: false,
     toLogin: false,
-    loading: false    
+    loading: false,
+    imageLoaded: null
 }
 
 
 export default class AdmUsers extends Component {
     constructor(props) {
-        super(props)      
-        let imgDoInput  
+        super(props)
+        
+        this.setAvatar = this.setAvatar.bind(this)
         this.state = {
-            ...initialState
+            ...initialState            
         }
     }
     
@@ -336,52 +339,45 @@ export default class AdmUsers extends Component {
     }
 
     
-    // Redimensiona a imagem que vier pra no max 100x100
-    imgHandler(ev) {
-        console.log(ev.target.files[0].name)        
-
+    // Pega a imagem carregada no input file e manda pro avatar editor
+    imgHandler(ev) {              
         var file = ev.target.files[0];
-        if(file) { 
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function(e) {
-                // var img = document.getElementById('image_preview');
-                // img.setAttribute('src', e.target.result);
-                var img = new Image();
-                img.src = e.target.result; // imagem normal.
-                console.log(img.height, img.width)      
-                var canvas = document.createElement("canvas");
-                var ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0);
-
-                var MAX_WIDTH = 100;
-                var MAX_HEIGHT = 100;
-                var width = img.width;
-                var height = img.height;
-                console.log(width, height)
-
-                if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
-                    }
-                } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
-                    }
-                }
-                canvas.width = width;
-                canvas.height = height;
-                var ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0, width, height);
-
-                let dataurl = canvas.toDataURL(file.type);
-                document.getElementById('output').src = dataurl;
-            }
-         //   reader.readAsDataURL(file);
+                
+        if(file) {             
+            this.setState({imageLoaded: file})            
+            //...
+            
         }
+        // else this.setState({ user: { ...this.state.user, avatar: null }}) 
+        else this.setState({imageLoaded: null})
     }    
+
+    setAvatar(dataURL) {
+        let blob = this.dataURItoBlob(dataURL);
+        this.setState({user: {...this.state.user, avatar: blob}})
+    }   
+
+    // É pra jogar o resultado disso no SQL
+    dataURItoBlob(dataURI) {
+        // convert base64/URLEncoded data component to raw binary data held in a string
+        var byteString;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0)
+            byteString = atob(dataURI.split(',')[1]);
+        else
+            byteString = unescape(dataURI.split(',')[1]);
+
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        // write the bytes of the string to a typed array
+        var ia = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        return new Blob([ia], {type:mimeString});
+    }
+          
 
     render() {
         // Se o admin se deletou OU se o admin se alterou e não conseguiu relogar OU se não tá logado OU se user logado não é admin. 
@@ -416,6 +412,10 @@ export default class AdmUsers extends Component {
                     <h4>{formTitle}</h4>
                     {showId}
 
+                    {/* Avatar img */}
+                    {/* <img src={this.File2URL(this.state.user.avatar)}/> */}
+                    <img src={this.state.user.avatar}/>
+
                     {/* Se admin */}
                     <div className="row gy-1 gx-1 my-2 admSelect">
                         <div className="">
@@ -449,6 +449,7 @@ export default class AdmUsers extends Component {
                         </div>
                     </div>  
 
+                    {/* input arquivo de imagem */}
                     <input type="file"
                         id="avatar" name="avatar"
                         accept="image/png, image/jpeg"
@@ -468,10 +469,18 @@ export default class AdmUsers extends Component {
                 {btnNewUser}
                 {showForm}                
                 {this.state.userTable}
+
+                <AvatarEditor
+                    image= {this.state.imageLoaded}
+                    width={100}
+                    height={100}
+                    border={20}
+                    color={[0, 0, 0, 0.8]} // RGBA
+                    scale={1}
+                    setAvatar={this.setAvatar}
+                />
                 
-                {/* Testando File Reader */}
-                <img id="image_preview"/>                
-                <img id="output"/>                
+
             </div>
         )
     }

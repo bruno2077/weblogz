@@ -2,7 +2,6 @@
 
 import './Avatar.css'
 import { Link } from 'react-router-dom'
-import userImg from "../../assets/img/avatars/0defaultAvatar.png"
 
 
 export default function Avatar(props) {
@@ -21,7 +20,7 @@ export default function Avatar(props) {
 
             <a className="btn dropdown-toggle" type="button"  id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                 <span className="username pe-3 overflow-hidden">{props.userName}</span>
-                <img className='userimg' src={userImg} alt="avatar"/>
+                <img className='userimg' src={props.pic} alt="avatar"/>
             </a>
 
             <ul className="dropdown-menu dropdown-menu-sm-end dropdown-menu-start"  aria-labelledby="navbarDropdown">

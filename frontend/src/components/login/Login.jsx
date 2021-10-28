@@ -45,8 +45,8 @@ export default class Login extends Component {
         // Login        
         if(!this.props.login.register) {            
             axios.post(`${baseApiUrl}/login`, this.state.user)
-                .then(res => {                                        
-                    // Armazena a resposta no App. Além disso bota o user no localStorage e o token no header Authorization do axios.                                         
+                .then(res => {                             
+                    // Armazena a resposta no App. Além disso bota os dados do user no localStorage e o token no header Authorization do axios.
                     this.props.user.set(res.data)
                 })                
                 .catch((e) => { // Em caso de erro limpa os dados de usuário e dá um alerta.                    

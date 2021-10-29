@@ -143,14 +143,14 @@ export default class Perfil extends Component {
             // react avatar editor
             return (
                 <AvatarEditor
-                        image= {this.state.imageLoaded} // O Arquivo
-                        width={100}
-                        height={100}
-                        border={20}
-                        color={[0, 0, 0, 0.8]} // RGBA
-                        scale={1}
-                        setAvatar={this.setAvatar}
-                        setTmpImg={this.setTmpImg}
+                    image= {this.state.imageLoaded} // O Arquivo
+                    width={100}
+                    height={100}
+                    border={20}
+                    color={[0, 0, 0, 0.8]} // RGBA
+                    scale={1}
+                    setAvatar={this.setAvatar}
+                    setTmpImg={this.setTmpImg}
                 />
             )
         }
@@ -159,44 +159,35 @@ export default class Perfil extends Component {
             return (
                 <div className="d-flex flex-column">
                     <div className="mb-3">
-                        <img className="avatarImg" src={this.state.user.avatar ? this.state.user.avatar : defaultAvatar}/>
+                        <img className="avatarImg" src={this.state.user.avatar ? this.state.user.avatar : defaultAvatar} alt="avatar"/>
                     </div>
                         
                     <input type="file"
                         id="avatar" name="avatar"
-                        accept="image/png, image/jpeg"                    
-                        onChange={e => { 
-                            this.imgHandler(e) // carrega o arquivo no state.imgLoaded                                        
+                        accept="image/png, image/jpeg"
+                        onChange={e => {
+                            this.imgHandler(e) // carrega o arquivo no state.imgLoaded
                         }}
-                    />         
-                </div>  
-            )              
-        }              
+                    />
+                </div>
+            )
+        }
     }
     
     
-    render() {
-        // Se não tem usuário logado e não está relogando o usuário: Redireciona pra tela de login.
-        if ((!this.props.user.get && !this.state.reLogging))
-            return <Redirect to='/login' />
-
-        // Se está validando o token no backend
-        if (this.state.validatingToken)
-            return <span>carregando.gif</span>
-
-               
+    showModalFooter() {
         // Array de botões no footer do Modal conforme se tem ou não um arquivo de imagem carregado.
         const modalBtns = []
         // Input file
         if(!this.state.imageLoaded) {       
             modalBtns.push(
-                <button key={1} type="button" className="btn btn-secondary" 
+                <button key="1" type="button" className="btn btn-secondary" 
                     onClick={e => {
                         this.setState({imageLoaded: null, tempImg: null, user: {...this.state.user, avatar: defaultAvatar} })                        
                     }}>
                     Excluir imagem
                 </button>,
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal"
+                <button key="2" type="button" className="btn btn-secondary" data-bs-dismiss="modal"
                 onClick={e => {
                     if(this.state.imageLoaded) {
                         this.setState({imageLoaded: null, tempImg: null})
@@ -209,14 +200,14 @@ export default class Perfil extends Component {
         // RAE
         else {
             modalBtns.push(
-                <button key={1} type="button" className="btn btn-secondary" data-bs-dismiss="modal"
+                <button key="1" type="button" className="btn btn-secondary" data-bs-dismiss="modal"
                     onClick={e => {
                         this.setState({user: {...this.state.user, avatar: this.state.tempImg} })
                         this.setState({imageLoaded: null, tempImg: null})
                     }}>
                     Salvar
                 </button>,
-                <button type="button" className="btn btn-secondary"
+                <button key="2" type="button" className="btn btn-secondary"
                 onClick={e => {
                     if(this.state.imageLoaded) {
                         this.setState({imageLoaded: null, tempImg: null})
@@ -226,6 +217,21 @@ export default class Perfil extends Component {
             </button>
             )            
         }
+        return modalBtns
+    }
+
+
+    render() {
+        // Se não tem usuário logado e não está relogando o usuário: Redireciona pra tela de login.
+        if ((!this.props.user.get && !this.state.reLogging))
+            return <Redirect to='/login' />
+
+        // Se está validando o token no backend
+        if (this.state.validatingToken)
+            return <span>carregando.gif</span>
+
+               
+        
 
 
         return (
@@ -238,12 +244,12 @@ export default class Perfil extends Component {
                     {/* Avatar do usuario */}
                     <div className="mb-3 row d-sm-flex align-items-center" data-bs-toggle="modal" data-bs-target="#avatarModal">
                         <div className="">
-                            <img className="avatarImg" src={this.state.user.avatar}/>
+                            <img className="avatarImg" src={this.state.user.avatar} alt="avatar"/>
                         </div>                                                
                     </div>                    
                     {/* Modal do avatar */}
                     <div className="modal fade" id="avatarModal" data-bs-backdrop="static" tabIndex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
-                        <div className="modal-dialog modal-dialog-scrollable">
+                        <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="avatarModalLabel">Alterar foto de perfil</h5>
@@ -261,7 +267,7 @@ export default class Perfil extends Component {
                                 </div>
                                 <div className="modal-footer">
                                     {/* Aqui é um array de botões dependendo do estado de imageLoaded */}
-                                    {modalBtns}                                    
+                                    {this.showModalFooter()}                                    
                                 </div>
                             </div>
                         </div>
@@ -298,8 +304,7 @@ export default class Perfil extends Component {
                         <div className="col-sm-3"></div>
                         <div className="btns-area col-sm-9 text-end">
                             <button className="btn btn-success me-3" onClick={e => this.updateUser()}>Salvar</button>
-                            <button className="btn btn-dark"><Link to="/">Voltar</Link></button>
-                            <button className="btn btn-warning" onClick={e => console.log(this.state.user)}>show user state</button>
+                            <Link to="/"><button className="btn btn-dark">Voltar</button></Link>                            
                         </div>
                     </div>
                 </div>

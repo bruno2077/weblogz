@@ -14,22 +14,22 @@ const Footer = props => {
             <div className="footerContent w-100 row gy-2 gx-1">
                 {/* esquerda */}
                 <div className="col-md-6 col-12 footerLeft d-flex flex-column p-md-4 ps-md-5 p-3 text-md-start text-center">
-                    <a href="https://github.com/bruno2077/weblogz" target="_blank">
+                    <a href="https://github.com/bruno2077/weblogz" target="_blank" rel="noopener noreferrer">
                         <img src={logo1}
                             onMouseOver={e => e.currentTarget.src = logo2}
                             onMouseOut={e => e.currentTarget.src = logo1} alt="Weblogz"
                         />
                     </a>
-                    <p className="mt-3"><a href="https://github.com/bruno2077/weblogz" target="_blank">Weblogz</a> é um blog multi autor simples, rápido e eficiente desenvolvido com Node.js e React.js</p>
+                    <p className="mt-3"><a href="https://github.com/bruno2077/weblogz" target="_blank" rel="noopener noreferrer">Weblogz</a> é um blog multi autor simples, rápido e eficiente desenvolvido com Node.js e React.js</p>
                 </div>
                 {/* direita */}
                 <div className="col-md-6 text-center mt-4" >
                     <div className="myLinks">
-                        <a href="https://www.linkedin.com/in/bruno2077"><i class="fab fa-linkedin fa-3x m-2"></i></a>
-                        <a href="https://github.com/bruno2077"><i class="fab fa-github fa-3x m-2"></i></a>
-                        <a href="https://bruno2077.github.io"><i class="fas fa-user-astronaut fa-3x m-2"></i></a>
+                        <a href="https://www.linkedin.com/in/bruno2077"><i className="fab fa-linkedin fa-3x m-2"></i></a>
+                        <a href="https://github.com/bruno2077"><i className="fab fa-github fa-3x m-2"></i></a>
+                        <a href="https://bruno2077.github.io"><i className="fas fa-user-astronaut fa-3x m-2"></i></a>
                     </div>
-                    <p className="mt-3">Desenvolvido por <a id="myLink" href="https://bruno2077.github.io/" target="_blank">Bruno2077</a></p>
+                    <p className="mt-3">Desenvolvido por <a id="myLink" href="https://bruno2077.github.io/" target="_blank" rel="noopener noreferrer">Bruno2077</a></p>
                 </div>
             </div>
 

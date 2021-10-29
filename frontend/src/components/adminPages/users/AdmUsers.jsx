@@ -6,6 +6,7 @@ import axios from 'axios';
 import {baseApiUrl } from '../../../global'
 import { Redirect } from 'react-router'
 import AvatarEditor from "../../avatarEditor/AvatarEditor";
+import defaultAvatar from '../../../assets/img/defaultAvatar.png'
 
 
 // Destaca a linha selecionada da tabela ou limpa o destaque.
@@ -25,7 +26,7 @@ function selectedRowToggler(tr) {
 const initialState = {
     user: {
         id: null,
-        avatar: null,
+        avatar: defaultAvatar,
         name: '',
         email: '',
         admin: false,
@@ -39,14 +40,16 @@ const initialState = {
     isNewUser: false,
     toLogin: false,
     loading: false,
-    imageLoaded: null
+    imageLoaded: null,
+    tempImg: null
+
 }
 
 
 export default class AdmUsers extends Component {
     constructor(props) {
         super(props)
-        
+        this.setTmpImg = this.setTmpImg.bind(this)
         this.setAvatar = this.setAvatar.bind(this)
         this.state = {
             ...initialState            
@@ -227,8 +230,10 @@ export default class AdmUsers extends Component {
 
     // Carrega no form o usuário onclick da tabela.
     loadUser(e) {
-        const userData = []
-        for(let i = 0; i < e.currentTarget.children.length; i++) {
+        const userData = []        
+        //avatar
+        userData.push(e.currentTarget.children[0].children[0].src)
+        for(let i = 1; i < e.currentTarget.children.length; i++) {
             userData.push(e.currentTarget.children[i].innerHTML)
         }
         this.setState({
@@ -252,7 +257,7 @@ export default class AdmUsers extends Component {
         // Cria um array com os [name=] das colunas do <thead>.
         const rawUserTheadData = Object.keys(this.state.users[0]) // ['id', 'name', 'email', 'avatar', 'admin']
         
-        // Organiza as colunas que vão pro cabeçalho da cabeçalho
+        // Organiza as colunas que vão pro cabeçalho da tabela
         const userTheadData = [] // ['avatar', 'name', 'email', 'admin', 'id':hidden]
         for(let i in rawUserTheadData) {
             switch(rawUserTheadData[i]) {
@@ -275,14 +280,21 @@ export default class AdmUsers extends Component {
             }
         }        
         // Cria um array com os [value=] das colunas do <thead>. 
-        const labels = ["Avatar", "Nome", "E-mail", "Administrador", "ID"]            
+        const labels = ["Avatar", 
+                        "Nome", 
+                        "E-mail", 
+                        <span><span className="d-none d-sm-inline">Administrador</span><span className="d-inline d-sm-none">Admin</span></span>, 
+                        "Código"]
 
         // Monta o cabeçalho da tabela.
         const userTheadField = []
-        for(let i in userTheadData) {
-            if (i < (labels.length-1) )
-                userTheadField.push(<th key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>)
-            else userTheadField.push(<th className="d-none" key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>)
+        userTheadField.push(<th className="tAvatar d-none d-sm-table-cell" key={`${0}`} name={userTheadData[0]}>{labels[0]}</th>) // coluna avatar
+        for(let i in userTheadData) {   
+            if(i !== "0") {
+                if (i < (labels.length-1) )
+                    userTheadField.push(<th key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>)                
+                else userTheadField.push(<th className="d-none d-md-table-cell" key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>) // coluna id
+            }
         }
         let userThead = <thead className="table-primary"><tr>{userTheadField}</tr></thead>
 
@@ -295,7 +307,7 @@ export default class AdmUsers extends Component {
             for (let attribKey in obj ) {                  
                 switch(attribKey) {
                     case "avatar":
-                        oneUser[0] = obj[attribKey] === null ? "DefImg" : obj[attribKey]
+                        oneUser[0] = obj[attribKey] ? obj[attribKey] : defaultAvatar
                         break
                     case "name":
                         oneUser[1] = `${obj[attribKey]}`
@@ -319,10 +331,15 @@ export default class AdmUsers extends Component {
         const userRows = []
         let userField = []
         for(let i in userTbodyData) {
-            for(let x in userTbodyData[i]) {
-                if(x < (userTbodyData[i].length-1) )
-                    userField.push(<td key={`${i},${x}`}>{`${userTbodyData[i][x]}`}</td>)
-                else userField.push(<td className="d-none" key={`${i},${x}`}>{`${userTbodyData[i][x]}`}</td>)
+            for(let x in userTbodyData[i]) {                
+                if(x === "0") { // coluna do avatar.
+                    userField.push(<td className="tAvatar d-none d-sm-table-cell" key={`${i},${0}`}><img className= "tAvatarUser" src={userTbodyData[i][0]} alt="user avatar"/></td>)
+                }
+                else {
+                    if(x < (userTbodyData[i].length-1) )
+                        userField.push(<td key={`${i},${x}`}>{`${userTbodyData[i][x]}`}</td>) 
+                    else userField.push(<td className="d-none d-md-table-cell" key={`${i},${x}`}>{`${userTbodyData[i][x]}`}</td>) // coluna do ID
+                }
             }
             userRows.push(<tr className="userRow" key={`${i}`} onClick={e => this.loadUser(e)}>{userField}</tr>)
             userField = []
@@ -339,43 +356,107 @@ export default class AdmUsers extends Component {
     }
 
     
-    // Pega a imagem carregada no input file e manda pro avatar editor
-    imgHandler(ev) {              
-        var file = ev.target.files[0];
+    // LIDANDO COM AVATAR
+    // Chama no onClick do input file. Carrega o arquivo de imagem numa variável e passa pro Avatar Editor tornando-o visível.    
+    imgHandler(ev) {
+        let file = ev.target.files[0]; // O arquivo q tava no PC. formato File.
                 
         if(file) {             
-            this.setState({imageLoaded: file})            
-            //...
-            
+            this.setState({imageLoaded: file}); // Monta o React Avatar Editor, passa o file.
         }
-        // else this.setState({ user: { ...this.state.user, avatar: null }}) 
+        
         else this.setState({imageLoaded: null})
     }    
-
+    
+    // Salva a imagem editada pelo RAE no state do usuário deste componente.
     setAvatar(dataURL) {
-        let blob = this.dataURItoBlob(dataURL);
-        this.setState({user: {...this.state.user, avatar: blob}})
+        this.setState({user: {...this.state.user, avatar: dataURL}, imageLoaded: null, tempImg: null})         
+    }   
+    // Roda no onChange do RAE. Essa imagem é salva no state do usuário aqui do componente quando termina a edição.
+    setTmpImg(val) {
+        this.setState({tempImg: val}) 
+    }
+
+    // Isso aqui aparece no corpo do Modal. Ou seleciona uma imagem via input ou edita a imagem já carregada.
+    showAvatarEditor() {
+        if(this.state.imageLoaded) {
+            // react avatar editor
+            return (
+                <AvatarEditor
+                    image= {this.state.imageLoaded} // O Arquivo
+                    width={100}
+                    height={100}
+                    border={20}
+                    color={[0, 0, 0, 0.8]} // RGBA
+                    scale={1}
+                    setAvatar={this.setAvatar}
+                    setTmpImg={this.setTmpImg}
+                />
+            )
+        }
+        else {
+            // input file do arquivo de imagem
+            return (
+                <div className="d-flex flex-column">
+                    <div className="mb-3">
+                        <img className="avatarImg" src={this.state.user.avatar ? this.state.user.avatar : defaultAvatar} alt="avatar"/>
+                    </div>
+                        
+                    <input type="file"
+                        id="avatar" name="avatar"
+                        accept="image/png, image/jpeg"
+                        onChange={e => {
+                            this.imgHandler(e) // carrega o arquivo no state.imgLoaded
+                        }}
+                    />
+                </div>
+            )
+        }
     }   
 
-    // É pra jogar o resultado disso no SQL
-    dataURItoBlob(dataURI) {
-        // convert base64/URLEncoded data component to raw binary data held in a string
-        var byteString;
-        if (dataURI.split(',')[0].indexOf('base64') >= 0)
-            byteString = atob(dataURI.split(',')[1]);
-        else
-            byteString = unescape(dataURI.split(',')[1]);
-
-        // separate out the mime component
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-        // write the bytes of the string to a typed array
-        var ia = new Uint8Array(byteString.length);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
+    showModalFooter() {
+        // Array de botões no footer do Modal conforme se tem ou não um arquivo de imagem carregado.
+        const modalBtns = []
+        // Input file
+        if(!this.state.imageLoaded) {       
+            modalBtns.push(
+                <button key="1" type="button" className="btn btn-secondary" 
+                    onClick={e => {
+                        this.setState({imageLoaded: null, tempImg: null, user: {...this.state.user, avatar: defaultAvatar} })                        
+                    }}>
+                    Excluir imagem
+                </button>,
+                <button key="2" type="button" className="btn btn-secondary" data-bs-dismiss="modal"
+                onClick={e => {
+                    if(this.state.imageLoaded) {
+                        this.setState({imageLoaded: null, tempImg: null})
+                    }
+                }}>
+                Voltar
+            </button>
+            )
         }
-
-        return new Blob([ia], {type:mimeString});
+        // RAE
+        else {
+            modalBtns.push(
+                <button key="1" type="button" className="btn btn-secondary" data-bs-dismiss="modal"
+                    onClick={e => {
+                        this.setState({user: {...this.state.user, avatar: this.state.tempImg} })
+                        this.setState({imageLoaded: null, tempImg: null})
+                    }}>
+                    Salvar
+                </button>,
+                <button key="2" type="button" className="btn btn-secondary"
+                onClick={e => {
+                    if(this.state.imageLoaded) {
+                        this.setState({imageLoaded: null, tempImg: null})
+                    }
+                }}>
+                Cancelar
+            </button>
+            )            
+        }
+        return modalBtns
     }
           
 
@@ -408,13 +489,41 @@ export default class AdmUsers extends Component {
                 formTitle = "Alterar usuário"
 
             showForm = (
-                <div className='col-12 col-lg-10'>
+                <div className=''>
                     <h4>{formTitle}</h4>
                     {showId}
 
-                    {/* Avatar img */}
-                    {/* <img src={this.File2URL(this.state.user.avatar)}/> */}
-                    <img src={this.state.user.avatar}/>
+                    {/* Avatar img. onclick chama o modal */}     
+                    <div className="mb-3 row d-sm-flex align-items-center" data-bs-toggle="modal" data-bs-target="#avatarModal">
+                        <div className="">
+                            <img className="avatarImg" src={this.state.user.avatar} alt="avatar"/>
+                        </div>                                                
+                    </div>
+                    {/* Modal do avatar */}
+                    <div className="modal fade" id="avatarModal" data-bs-backdrop="static" tabIndex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="avatarModalLabel">Alterar foto de perfil</h5>
+                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" 
+                                        onClick={e => {
+                                            if(this.state.imageLoaded) {
+                                                this.setState({imageLoaded: null, tempImg: null})
+                                            }
+                                        }}>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    {/* input file ou RAE. Depende se uma imagem foi carregada. */}
+                                    {this.showAvatarEditor()}
+                                </div>
+                                <div className="modal-footer">
+                                    {/* Aqui é um array de botões dependendo do estado de imageLoaded */}
+                                    {this.showModalFooter()}                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Se admin */}
                     <div className="row gy-1 gx-1 my-2 admSelect">
@@ -447,15 +556,9 @@ export default class AdmUsers extends Component {
                         <div className="col-md-5 col-sm-6">
                             <input className="form-control" name="confirmPassword" onChange={e => this.handleChange(e, e.target.name)} type="password" placeholder="Confirme a senha" id="inputConfirmPassword" aria-describedby="inputConfirmPassword"/>
                         </div>
-                    </div>  
+                    </div>                      
 
-                    {/* input arquivo de imagem */}
-                    <input type="file"
-                        id="avatar" name="avatar"
-                        accept="image/png, image/jpeg"
-                        onChange={e => this.imgHandler(e)} />
-
-                    <div>
+                    <div className="text-sm-start text-center">
                         <button className="btn btn-primary my-2 me-2" onClick={e => this.sendUser()}>Salvar</button>
                         <button className="btn btn-dark my-2 me-2" onClick={e => { this.restart(false); selectedRowToggler(false); }}>Descartar</button>
                         {btnDel}
@@ -467,20 +570,10 @@ export default class AdmUsers extends Component {
         return (
             <div>             
                 {btnNewUser}
-                {showForm}                
-                {this.state.userTable}
-
-                <AvatarEditor
-                    image= {this.state.imageLoaded}
-                    width={100}
-                    height={100}
-                    border={20}
-                    color={[0, 0, 0, 0.8]} // RGBA
-                    scale={1}
-                    setAvatar={this.setAvatar}
-                />
-                
-
+                {showForm}            
+                <div className="table-responsive">
+                    {this.state.userTable}
+                </div>    
             </div>
         )
     }

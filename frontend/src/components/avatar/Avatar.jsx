@@ -18,7 +18,7 @@ export default function Avatar(props) {
     return (
         <div className="dropdown" id="avatar-area">
 
-            <a className="btn dropdown-toggle" type="button"  id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            <a className="btn dropdown-toggle d-flex align-items-center" type="button"  id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                 <span className="username pe-3 overflow-hidden">{props.userName}</span>
                 <img className='userimg' src={props.pic} alt="avatar"/>
             </a>

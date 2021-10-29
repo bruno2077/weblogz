@@ -7,7 +7,7 @@ import logo from '../../assets/img/logo_light.png';
 
 
 export default function Header(props) {
-    // console.log("Header carregado")
+    console.log("Header carregado")
      
     const buttons = []
     
@@ -28,7 +28,7 @@ export default function Header(props) {
     }
 
     return (
-        <header>
+        <header className="col-12">
             <nav className="navbar navbar-dark bg-dark w-100 m-0 p-0 d-flex justify-content-sm-between justify-content-center">
                 <Link to="/" className="navbar-brand ms-4 py-1 d-none d-sm-block"><img src={logo} alt="Weblogz logo"></img></Link>
                 {buttons}

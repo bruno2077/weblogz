@@ -44,7 +44,7 @@ export default function AdminPages(props) {
     // Esconde o conteúdo principal (main e aside) ao carregar esse componente. Reaparece ao desmontar esse componente.
     useEffect( () => {
         // roda quando monta
-        //console.log("admPages carregado")
+        console.log("admPages carregado")
         tabToggler(null, props.page)
         if(props.mainContent.get) 
             props.mainContent.set(false)

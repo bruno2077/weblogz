@@ -49,8 +49,7 @@ export default class App extends Component {
                     // Monta um objeto pra carregar o usuário da aplicação.                     
                     let userToSend = { payload: {...LSUser}, token: LSUser.token, avatar: avatarString ? avatarString : null }
                     delete userToSend.payload.token
-                    console.log("userToSend: ", userToSend)                    
-                                  
+                    
                     this.handleUserChange(userToSend) // Pega os dados do user validado e põe no state da aplicação e o token no header.
                 }
                 else {                    

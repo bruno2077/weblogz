@@ -98,7 +98,11 @@ module.exports = app => {
     // Consulta. Retorna todos os usuários sem paginação, ou retorna 1 usuário.
     const get = async (req, res) => {
         if(!req.params.id) {
-            const users = await app.db.select('id','name', 'email', 'avatar', 'admin').from('users').whereNull('deletedAt')          
+            const users = await app.db.select('id','name', 'email', 'avatar', 'admin').from('users').whereNull('deletedAt') 
+            // avatar é armazenado em bytea, converte pra string pra mandar pro frontend.
+            users.forEach( (el, idx) => {
+                el.avatar = el.avatar ? el.avatar.toString() : ""
+            });            
             res.send(users)
         }
         else {

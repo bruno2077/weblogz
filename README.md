@@ -40,10 +40,14 @@ Usuários comuns tem acesso ao editor de texto (pra escrever os artigos futurame
 Usuários administradores também tem acesso a página de administração de usuários onde é listado todos os usuários cadastrados e podem criar, alterar e deletar qualquer usuário incluindo a si próprios.
 
 ## Screenshots
+<h4>Introdução</h4>
+<a href="./screenshots/introduction.gif"><img alt="Introdução" width="400" src="./screenshots/introduction.gif"></a>
 
-<a href="./screenshots/introduction.gif"><img alt="Introdução" width="400" src="./screenshots/introduction.gif""></a>
-<a href="./screenshots/profile.gif"><img alt="Perfil" width="400" src="./screenshots/profile.gif""></a>
-<a href="./screenshots/crud.gif"><img alt="CRUD de usuário" width="400" src="./screenshots/crud.gif""></a>
+<h4>Perfil de usuário</h4>
+<a href="./screenshots/profile.gif"><img alt="Perfil" width="400" src="./screenshots/profile.gif"></a>
+
+<h4>CRUD de usuário</h4>
+<a href="./screenshots/crud.gif"><img alt="CRUD de usuário" width="400" src="./screenshots/crud.gif"></a>
 
 ## Tecnologias
 As seguintes ferramentas foram usadas na construção do projeto:

@@ -6,6 +6,15 @@
 .avatarImg {    
     border: 1px solid #444;
     border-radius: 10px;
-    background-color: #fff;
-    /* Botar o cursor da mão no hover */
+    background-color: #fff;    
+}
+
+
+.perfil .avatarImg:hover {
+    cursor: pointer;
+    box-shadow: 0 0 1em #777;
+}
+.perfil .modal-body .avatarImg:hover {
+    cursor: default;
+    box-shadow: 0 0 0px #777; 
 }

@@ -7,6 +7,15 @@ export const baseApiUrl = 'http://localhost:3005'
 
 export const userKey = "__weblogz_user"
 export const avatarKey = "__weblogz_avatar"
+export const toastOptions = {    
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined        
+}
 
 // Verifica se o token é válido usando os dados do usuário no localStorage. Retorna 0 ou 1
 export async function isValidToken(userData) {
@@ -29,4 +38,4 @@ export async function isValidToken(userData) {
     return 0
 }
 
-export default { baseApiUrl, userKey, avatarKey, isValidToken }
+export default { baseApiUrl, userKey, avatarKey, isValidToken, toastOptions }

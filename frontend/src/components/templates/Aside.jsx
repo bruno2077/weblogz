@@ -20,8 +20,13 @@ const Aside = props =>
 
         <div className='aside-item'>
             <h3>Categorias</h3>
-            <div>                
-                Lista de categorias aqui
+            <div>
+                {/* lista de categorias aqui */}
+                <ul>
+                    <li>categoria 1</li>
+                    <li>categoria 2</li>
+                    <li>categoria 3</li>
+                </ul> 
             </div>
         </div>
     </aside>

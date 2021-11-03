@@ -1,27 +1,68 @@
 // Página de administração dos usuários
 
-import { Component } from "react";
+import React, { Component } from "react"
 import './AdmUsers.css'
-import axios from 'axios';
-import {baseApiUrl } from '../../../global'
+import axios from 'axios'
+import {baseApiUrl, toastOptions } from '../../../global'
 import { Redirect } from 'react-router'
-import AvatarEditor from "../../avatarEditor/AvatarEditor";
+import AvatarEditor from "../../avatarEditor/AvatarEditor"
 import defaultAvatar from '../../../assets/img/defaultAvatar.png'
+import loadingImg from '../../../assets/img/loading.gif'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 // Destaca a linha selecionada da tabela ou limpa o destaque.
 function selectedRowToggler(tr) {
-    const rows = document.getElementsByClassName("userRow")  
+    const rows = document.getElementsByClassName("userRow")
     if(rows.length) {
         for(let i of rows ) {
-            i.classList.remove("table-primary")                   
-        }    
+            i.classList.remove("table-primary")
+        }
         if(tr) {
             tr.classList.add("table-primary")
         }
     }
 }
 
+// Ordena a tabela pela coluna onclick.
+function sortTable(tableColumn, isNumber) {
+    let table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("theUserTable");
+    
+    switching = true;    
+    // Faz um loop até que nenhuma troca de linha seja feita.
+    while (switching) {           
+        switching = false;
+        rows = table.rows;        
+        // Faz um loop em todas as linhas da tabela menos na primeira que é o cabeçalho.
+        for (i = 1; i < (rows.length - 1); i++) {            
+            shouldSwitch = false;            
+            // Pega os 2 elementos que queremos comparar, a linha atual e a próxima.
+            x = rows[i].getElementsByTagName("TD")[tableColumn];
+            y = rows[i + 1].getElementsByTagName("TD")[tableColumn];
+
+            // Primeiro checa se a coluna é de inteiro ou string, e então compara as duas linhas.
+            if(isNumber) { // integer
+                if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {                    
+                    shouldSwitch = true;
+                    break; // sai do laço for
+                }
+            }
+            else { // string
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {                    
+                    shouldSwitch = true;
+                    break; // sai do laço for
+                }
+            }        
+        }
+        
+        if (shouldSwitch) {            
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
+}
 
 const initialState = {
     user: {
@@ -120,10 +161,10 @@ export default class AdmUsers extends Component {
                 if(e.response) { 
                     if(e.response.status === 401) // Se erro de não autorizado, desloga. É token expirado.
                         this.props.user.set(false)
-                    alert(e.response.data)
+                    toast.error(e.response.data, toastOptions)
                 }
                 else {
-                    alert(e)
+                    toast.error(e, toastOptions)
                     this.setState({loading: false})
                 }
             })
@@ -149,7 +190,7 @@ export default class AdmUsers extends Component {
             userToSend.id = this.state.user.id
             axios.put(`${baseApiUrl}/users/${userToSend.id}`, userToSend)
                 .then(res => {
-                    alert(res.data) // Responde que alterou o usuário.                    
+                    toast.success(`${res.data}`, toastOptions) // Responde que alterou o usuário.
                     // Se o admin alterou seu próprio usuário, reloga e restart().                    
                     if(this.props.user.get.id === userToSend.id)
                         this.reLogin()
@@ -159,10 +200,10 @@ export default class AdmUsers extends Component {
                     if(e.response) { 
                         if(e.response.status === 401) // Se erro de não autorizado, desloga. É token expirado.
                             this.props.user.set(false)
-                        alert(e.response.data)
+                        toast.error(e.response.data, toastOptions)
                     }
                     else {
-                        alert(e)                        
+                        toast.error(e, toastOptions)
                     }
                 })
         }
@@ -171,17 +212,17 @@ export default class AdmUsers extends Component {
         else {
             axios.post(`${baseApiUrl}/users`, userToSend)
                 .then(res => {
-                    alert(res.data) // Responde que criou o usuário
+                    toast.success(res.data, toastOptions) // Responde que criou o usuário
                     this.restart(true)
                 })                
                 .catch(e => {
                     if(e.response) { 
                         if(e.response.status === 401) // Se erro de não autorizado, desloga. É token expirado.
                             this.props.user.set(false)
-                        alert(e.response.data)
+                        toast.error(e.response.data, toastOptions)
                     }
                     else {
-                        alert(e)                        
+                        toast.error(e, toastOptions)
                     }
                 })
         }
@@ -191,7 +232,7 @@ export default class AdmUsers extends Component {
     deleteUser() {
         axios.delete(`${baseApiUrl}/users/${this.state.user.id}`, this.state.user)
             .then(res => {
-                alert(res.data) // Responde que deletou o usuário
+                toast.warning(res.data, { ...toastOptions, autoClose: 5000, pauseOnHover: true }) // Responde que deletou o usuário
                 // Se o admin se excluiu, desloga e redireciona.                
                 if(this.props.user.get.id === parseInt(this.state.user.id)) {
                     this.props.user.set(false)
@@ -200,7 +241,7 @@ export default class AdmUsers extends Component {
                 else this.restart(true)
             })
             .catch(e => {
-                alert(e)
+                toast.error(e, toastOptions)
                 this.restart(true)
             })
     }
@@ -223,7 +264,7 @@ export default class AdmUsers extends Component {
             .catch((e) => {
                 // Se der algum erro aqui desloga e redireciona.                
                 this.props.user.set(false)
-                alert(e.response.data ? e.response.data : e)
+                toast.error(e.response.data ? e.response.data : e, toastOptions)
                 this.setState({ toLogin: true })                
             })
     }
@@ -235,19 +276,20 @@ export default class AdmUsers extends Component {
         userData.push(e.currentTarget.children[0].children[0].src)
         for(let i = 1; i < e.currentTarget.children.length; i++) {
             userData.push(e.currentTarget.children[i].innerHTML)
-        }
+        }        
         this.setState({
             user: {
                 ...this.state.user,
-                avatar: userData[0] === "defImg" ? null : userData[0],
+                avatar: userData[0],
                 name: userData[1],
                 email: userData[2],
-                admin: userData[3] === "true" ? true : false,
+                admin: userData[3] === "Sim" ? "true" : "false",
                 id: parseInt(userData[4])
             },
             isUserLoaded: true,
             isNewUser: false
-        })        
+        })
+        console.log("carregado: ", this.state.user)
         // Função pra destacar o usuário selecionado da tabela        
         selectedRowToggler(e.currentTarget)
     }
@@ -283,7 +325,7 @@ export default class AdmUsers extends Component {
         const labels = ["Avatar", 
                         "Nome", 
                         "E-mail", 
-                        <span><span className="d-none d-sm-inline">Administrador</span><span className="d-inline d-sm-none">Admin</span></span>, 
+                        <span><span className="d-none d-lg-inline">Administrador</span><span className="d-inline d-lg-none">Admin</span></span>, 
                         "Código"]
 
         // Monta o cabeçalho da tabela.
@@ -292,8 +334,8 @@ export default class AdmUsers extends Component {
         for(let i in userTheadData) {   
             if(i !== "0") {
                 if (i < (labels.length-1) )
-                    userTheadField.push(<th key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>)                
-                else userTheadField.push(<th className="d-none d-md-table-cell" key={`${i}`} name={userTheadData[i]}>{labels[i]}</th>) // coluna id
+                    userTheadField.push(<th key={`${i}`} className="theadClick" onClick={e => sortTable(i)} name={userTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>)                
+                else userTheadField.push(<th className="d-none d-md-table-cell theadClick" onClick={e => sortTable(i,1)} key={`${i}`} name={userTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>) // coluna id
             }
         }
         let userThead = <thead className="table-primary"><tr>{userTheadField}</tr></thead>
@@ -346,7 +388,7 @@ export default class AdmUsers extends Component {
         }
         const userTbody = <tbody className="table-light">{userRows}</tbody>
         const userTheadTbody = 
-            <table className="table table-hover caption-top mt-4">
+            <table id="theUserTable"className="table table-hover caption-top mt-4">
                 <caption className="tTitle text-center" >Tabela de usuários</caption>    
                 {userThead} 
                 {userTbody}
@@ -458,7 +500,7 @@ export default class AdmUsers extends Component {
         }
         return modalBtns
     }
-          
+    
 
     render() {
         // Se o admin se deletou OU se o admin se alterou e não conseguiu relogar OU se não tá logado OU se user logado não é admin. 
@@ -467,15 +509,17 @@ export default class AdmUsers extends Component {
 
         // Se está validando o token no backend ou se está pegando a lista de usuários no backend.
         if(this.state.loading)
-            return <span>carregando.gif</span>
+            return <div className="loadiv"><img src={loadingImg} className="loading"/></div>
 
-        let btnNewUser, showId, showForm, btnDel = null
+        let btnNewUser, showId, showForm, btnDel, showDelConfirmation = null
+        
         let formTitle = this.state.isNewUser ? "Novo usuário" : "Editar usuário"
 
         // usuário carregado e não é user novo: mostra o campo ID e o botão [deletar] no form.
         if( this.state.isUserLoaded && !this.state.isNewUser ) {
             showId = <p>ID: <span>{this.state.user.id}</span></p>
-            btnDel = <button className="btn btn-danger my-2" onClick={e => this.deleteUser()}>Deletar usuário</button>
+            // btnDel = <button className="btn btn-danger my-2" onClick={e => this.deleteUser()}>Deletar usuário</button>
+            btnDel = <button className="btn btn-danger my-2" data-bs-toggle="modal" data-bs-target="#delUserModal">Deletar usuário</button>
         }
 
         // Usuário não carregado: aparece só o botão de novo usuário, não aparece o form.
@@ -494,10 +538,10 @@ export default class AdmUsers extends Component {
                     {showId}
 
                     {/* Avatar img. onclick chama o modal */}     
-                    <div className="mb-3 row d-sm-flex align-items-center" data-bs-toggle="modal" data-bs-target="#avatarModal">
+                    <div className="mb-3 row d-sm-flex align-items-center" >
                         <div className="">
-                            <img className="avatarImg" src={this.state.user.avatar} alt="avatar"/>
-                        </div>                                                
+                            <img className="avatarImg" src={this.state.user.avatar} alt="avatar" data-bs-toggle="modal" data-bs-target="#avatarModal"/>
+                        </div>
                     </div>
                     {/* Modal do avatar */}
                     <div className="modal fade" id="avatarModal" data-bs-backdrop="static" tabIndex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
@@ -562,18 +606,44 @@ export default class AdmUsers extends Component {
                         <button className="btn btn-primary my-2 me-2" onClick={e => this.sendUser()}>Salvar</button>
                         <button className="btn btn-dark my-2 me-2" onClick={e => { this.restart(false); selectedRowToggler(false); }}>Descartar</button>
                         {btnDel}
-                    </div>
+                        
+                        {/* Modal da deleção */}
+                        <div className="modal fade" id="delUserModal" data-bs-backdrop="static" tabIndex="-1" aria-labelledby="delUserModalLabel" aria-hidden="true">
+                            <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="delUserModalLabel">Tem certeza que deseja remover este usuário?</h5>                                        
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                            onClick={e => {
+                                                if(this.state.imageLoaded) {
+                                                    this.setState({imageLoaded: null, tempImg: null})
+                                                }
+                                            }}>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">                                        
+                                        <button className="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close" onClick={e => this.deleteUser()} >Confirmar</button>
+                                        <button className="btn btn-secondary mx-3" data-bs-dismiss="modal" aria-label="Close" >Cancelar</button>
+                                    </div>                                  
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>                    
                 </div>
             )            
-        }
+        }                
         
         return (
-            <div>             
+            <div className="admUsers">
                 {btnNewUser}
-                {showForm}            
+
+                {showForm}
+
                 <div className="table-responsive">
                     {this.state.userTable}
-                </div>    
+                </div>
+                
             </div>
         )
     }

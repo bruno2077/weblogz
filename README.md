@@ -54,7 +54,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - Bootstrap
 
 ## Autor
-Feito por Bruno Borges Gontijo, entre em contato.
+Desenvolvido por Bruno Borges Gontijo, entre em contato.
 
 [<img src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" />](https://www.linkedin.com/in/bruno2077/) [<img src="https://img.shields.io/badge/Microsoft_Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white "/>](mailto:assembleia23@hotmail.com)
 

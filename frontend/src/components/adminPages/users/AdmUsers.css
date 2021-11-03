@@ -21,3 +21,28 @@
     width: 70px;
     overflow: hidden;
 }
+
+.admUsers .avatarImg:hover {
+    cursor: pointer;
+    box-shadow: 0 0 1em #777;
+}
+.admUsers .modal-body .avatarImg:hover {
+    cursor: default;   
+    box-shadow: 0 0 0px #777; 
+}
+
+.loadiv {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.theadClick {
+    cursor: pointer;
+}
+.theadClick:hover {
+    background-color: #CFE2FF77;
+}
+.theadClick:active {
+    color: #fff;
+}

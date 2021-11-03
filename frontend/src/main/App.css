@@ -24,3 +24,15 @@ body {
     align-items: center;
     margin: 20px 0px 20px 0px;
 }
+
+#root > .loadiv{
+    width: 100vw;
+    height: 100vh;
+    display: flex;    
+    justify-content: center;
+    align-items: center;
+}
+.loading {
+    width: 150px;
+    height: 150px;    
+}

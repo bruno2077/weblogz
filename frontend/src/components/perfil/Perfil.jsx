@@ -2,12 +2,16 @@
 
 import './Perfil.css'
 import { Redirect } from 'react-router'
-import { baseApiUrl, isValidToken } from '../../global'
+import { baseApiUrl, isValidToken, toastOptions } from '../../global'
 import { Component } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import AvatarEditor from '../avatarEditor/AvatarEditor'
 import defaultAvatar from '../../assets/img/defaultAvatar.png'
+import loadingImg from '../../assets/img/loading.gif'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default class Perfil extends Component {
     constructor(props) {
@@ -50,7 +54,7 @@ export default class Perfil extends Component {
                 }
             })
                 .catch(e => { // Não caiu aqui nem com backend offline. mas tratamos qq erro.
-                    alert(e)
+                    toast.error(e, toastOptions)
                 })
         }
     }
@@ -92,8 +96,8 @@ export default class Perfil extends Component {
                 this.props.user.set(false)
                 this.setState({ reLogging: false })
                 if (e.response)
-                    alert(e.response.data)
-                else alert(e)
+                    toast.error(e.response.data, toastOptions)
+                else toast.error(e, toastOptions)
             })
     }
 
@@ -101,19 +105,19 @@ export default class Perfil extends Component {
     updateUser() {
         axios.put(`${baseApiUrl}/home`, this.state.user)
             .then(res => {
-                alert(res.data)
+                toast.success(res.data, toastOptions)
                 // Reloga o usuário com as informações atualizadas.
                 this.reLogin()
             })
             .catch((e) => {
                 if (e.response) {
                     if (e.response.status === 401) { // Não autorizado. Isso é token expirado.
-                        alert(e.response.data)
+                        toast.error(e.response.data, toastOptions)
                         this.props.user.set(false)
                     }
-                    else alert(e.response.data)
+                    else toast.error(e.response.data, toastOptions)
                 }
-                else alert(e)
+                else toast.error(e, toastOptions)
             })
     }
 
@@ -228,24 +232,21 @@ export default class Perfil extends Component {
 
         // Se está validando o token no backend
         if (this.state.validatingToken)
-            return <span>carregando.gif</span>
-
-               
-        
+            return <div className="loadiv"><img src={loadingImg} className="loading"/></div>
 
 
         return (
-            <div className="col-12 col-sm-9 col-md-8 col-lg-6 col-xl-6">
+            <div className="col-12 col-sm-9 col-md-8 col-lg-6 col-xl-6 perfil">
                 <h2>Dados do usuário</h2>
                 <p>Preencha todos os campos abaixo para alterar seus dados.</p>
 
                 <div className="border rounded p-4 " >
 
                     {/* Avatar do usuario */}
-                    <div className="mb-3 row d-sm-flex align-items-center" data-bs-toggle="modal" data-bs-target="#avatarModal">
+                    <div className="mb-3 row d-sm-flex align-items-center" >
                         <div className="">
-                            <img className="avatarImg" src={this.state.user.avatar} alt="avatar"/>
-                        </div>                                                
+                            <img className="avatarImg" src={this.state.user.avatar} alt="avatar" data-bs-toggle="modal" data-bs-target="#avatarModal"/>
+                        </div>
                     </div>                    
                     {/* Modal do avatar */}
                     <div className="modal fade" id="avatarModal" data-bs-backdrop="static" tabIndex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
@@ -308,6 +309,7 @@ export default class Perfil extends Component {
                         </div>
                     </div>
                 </div>
+                
             </div>
         )
     }

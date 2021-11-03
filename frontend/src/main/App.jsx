@@ -10,7 +10,9 @@ import axios from 'axios'
 import {BrowserRouter as Router} from 'react-router-dom'
 import Routes from '../main/Routes'
 import defaultAvatar from '../assets/img/defaultAvatar.png'
+import loadingImg from '../assets/img/loading.gif'
 
+import { ToastContainer } from 'react-toastify';
 
 export default class App extends Component {
     constructor(props) {
@@ -104,10 +106,10 @@ export default class App extends Component {
 
     
     render() {        
-        const mainContent = []
-        
+        const mainContent = []        
+
         if(this.state.validatingToken)
-            return <span className="img-center">Carregando.gif</span>
+            return <div className="loadiv"><img src={loadingImg} className="loading"/></div>
                 
         else {
             if(this.state.showMain) {
@@ -115,7 +117,7 @@ export default class App extends Component {
                 mainContent.push(<Aside key="2"/>)                
             }
             return (
-                <Router>
+                <Router>                    
                     <Header 
                         user={ {get: this.state.user, set: this.handleUserChange} } 
                         login={ {register: this.state.regfix, setRegister: val => this.setState({regfix: val})} }
@@ -129,6 +131,7 @@ export default class App extends Component {
                     {mainContent}
 
                     <Footer/>
+                    <ToastContainer/>
                 </Router>
             )    
         }

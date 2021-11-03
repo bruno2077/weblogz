@@ -3,10 +3,12 @@
 import './Login.css'
 import { Component } from 'react'
 import axios from 'axios'
-import { baseApiUrl } from '../../global'
+import { baseApiUrl, toastOptions } from '../../global'
 import { Redirect } from 'react-router'
 import defaultAvatar from '../../assets/img/defaultAvatar.png'
 import AvatarEditor from '../avatarEditor/AvatarEditor'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UserInitialState = {
     email: '',
@@ -16,6 +18,7 @@ const UserInitialState = {
     admin: false,
     avatar: defaultAvatar
 }
+
 
 export default class Login extends Component {
     constructor(props) {
@@ -55,11 +58,11 @@ export default class Login extends Component {
                     // Armazena a resposta no App. Além disso bota os dados do user no localStorage e o token no header Authorization do axios.
                     this.props.user.set(res.data)
                 })                
-                .catch((e) => { // Em caso de erro limpa os dados de usuário e dá um alerta.                    
+                .catch((e) => { // Em caso de erro limpa os dados de usuário e dá um alerta.                                        
                     if(e.response)
-                        alert(e.response.data)
+                        toast.error(e.response.data, toastOptions);
 
-                    else alert(e)
+                    else toast.error(e, toastOptions)
 
                     this.props.login.set(false) // logoff                    
                 })                
@@ -71,13 +74,13 @@ export default class Login extends Component {
                     // responde que deu certo e redireciona pra tela de login
                     this.setState({ user: {...UserInitialState} })
                     this.props.login.setReg(false)
-                    alert(res.data)
+                    toast.success(res.data, toastOptions)
                 })
                 .catch(e => {
                     if(e.response)
-                        alert(e.response.data)
+                        toast.error(e.response.data, toastOptions)
 
-                    else alert(e)
+                    else toast.error(e, toastOptions)
                 })
         }
     }
@@ -128,7 +131,7 @@ export default class Login extends Component {
                         <img className="avatarImg" src={this.state.user.avatar} alt="avatar"/>
                     </div>
                     
-                    <input type="file" id="selectAvatarFile" className="" onChange={e => {this.imgHandler(e)}} />
+                    <input type="file" accept="image/png, image/jpeg" id="selectAvatarFile" className="" onChange={e => {this.imgHandler(e)}} />
                 </div>                
             )
         }
@@ -213,7 +216,7 @@ export default class Login extends Component {
                         <img className="avatarImg" src={this.state.user.avatar} alt="avatar"/>
                     </div>
                     <div className="">
-                        <input type="file" id="selectAvatarFile" className="" data-bs-toggle="modal" data-bs-target="#avatarModal" 
+                        <input type="file" accept="image/png, image/jpeg" id="selectAvatarFile" className="" data-bs-toggle="modal" data-bs-target="#avatarModal" 
                             onChange={e => {this.imgHandler(e)}} /> 
                     </div>
                 </div>
@@ -270,7 +273,8 @@ export default class Login extends Component {
                         </div>
                     </div>
 
-                    {fields}
+                    {fields}                    
+                    
                 </div>
             </div>
         )

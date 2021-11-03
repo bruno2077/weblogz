@@ -39,6 +39,12 @@ Usuários comuns tem acesso ao editor de texto (pra escrever os artigos futurame
 
 Usuários administradores também tem acesso a página de administração de usuários onde é listado todos os usuários cadastrados e podem criar, alterar e deletar qualquer usuário incluindo a si próprios.
 
+## Screenshots
+
+<a href="./screenshots/introduction.gif"><img alt="Introdução" width="400" src="./screenshots/introduction.gif""></a>
+<a href="./screenshots/profile.gif"><img alt="Perfil" width="400" src="./screenshots/profile.gif""></a>
+<a href="./screenshots/crud.gif"><img alt="CRUD de usuário" width="400" src="./screenshots/crud.gif""></a>
+
 ## Tecnologias
 As seguintes ferramentas foram usadas na construção do projeto:
 - VS Code

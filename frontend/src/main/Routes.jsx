@@ -7,7 +7,7 @@ import AdminPages from "../components/adminPages/AdminPages";
 
 function AdmPage(props) {
     let { page } = useParams()
-    return <AdminPages page={`${page}`} user={props.user} mainContent={props.mainContent}/>
+    return <AdminPages page={`${page}`} user={props.user} mainContent={props.mainContent} categories={props.categories}/>
 }
 
 
@@ -30,11 +30,11 @@ const Routes = props => {
                 </Route>
                 
                 <Route exact path='/admin'> 
-                    <AdminPages user={props.user} mainContent={props.mainContent}/>
+                    <AdminPages user={props.user} mainContent={props.mainContent} categories={props.categories}/>
                 </Route>
 
                 <Route path='/admin/:page'> 
-                    <AdmPage user={props.user} mainContent={props.mainContent}/>
+                    <AdmPage user={props.user} mainContent={props.mainContent} categories={props.categories}/>
                 </Route>
 
                 <Redirect from='*' to='/'/>        

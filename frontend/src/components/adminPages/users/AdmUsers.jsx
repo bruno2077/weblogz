@@ -612,14 +612,7 @@ export default class AdmUsers extends Component {
                             <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
                                 <div className="modal-content">
                                     <div className="modal-header">
-                                        <h5 className="modal-title" id="delUserModalLabel">Tem certeza que deseja remover este usuário?</h5>                                        
-                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                                            onClick={e => {
-                                                if(this.state.imageLoaded) {
-                                                    this.setState({imageLoaded: null, tempImg: null})
-                                                }
-                                            }}>
-                                        </button>
+                                        <h5 className="modal-title" id="delUserModalLabel">Tem certeza que deseja remover este usuário?</h5>
                                     </div>
                                     <div className="modal-body">                                        
                                         <button className="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close" onClick={e => this.deleteUser()} >Confirmar</button>

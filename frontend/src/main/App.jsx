@@ -4,7 +4,7 @@ import Main from '../components/templates/Main'
 import Aside from '../components/templates/Aside'
 import Footer from '../components/templates/Footer'
 
-import { isValidToken, userKey, avatarKey } from '../global'
+import { isValidToken, userKey, avatarKey, toastOptions, baseApiUrl } from '../global'
 import { Component } from 'react'
 import axios from 'axios'
 import {BrowserRouter as Router} from 'react-router-dom'
@@ -12,7 +12,8 @@ import Routes from '../main/Routes'
 import defaultAvatar from '../assets/img/defaultAvatar.png'
 import loadingImg from '../assets/img/loading.gif'
 
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 export default class App extends Component {
     constructor(props) {
@@ -20,19 +21,21 @@ export default class App extends Component {
         this.handleLoginChange = this.handleLoginChange.bind(this)
         this.handleUserChange = this.handleUserChange.bind(this)
         this.handleShowMainChange = this.handleShowMainChange.bind(this)
+        this.getCategories = this.getCategories.bind(this)
         this.state = {
             validatingToken: true, // Se está validando token no backend. 
+            loading: true, // Se está buscando algo (p. ex. categorias) no backend.
             isLogged: null, // Se o usuário está ou não logado.
             regfix: false, // faz o toggle do form no /login
             user: null, // o componentDidMount q carrega o usuário
+            categories: null, // o componentDidMount q carrega as categorias
             showMain: true // renderiza ou não o main e o aside
         }
     }
     
     // Sempre que monta o componente App verifica se o token no localStorage está válido. Se não tiver limpa os dados de usuário.
     componentDidMount() {
-        console.log("App Montado")      
-
+        console.log("App Montado")
         
         // checa SE user no LS, se sim checa SE é válido
         // SE válido, setar este user no state aqui + adiciona token no axios header authorization.
@@ -63,6 +66,10 @@ export default class App extends Component {
             .catch( e => alert(e) ) // Tratando qualquer erro que der neste acesso ao backend.
         }
         else this.setState({ validatingToken: false })
+
+        // seta loading true, busca categorias no back, ready, loading false.
+        this.getCategories()
+        
     }    
 
 
@@ -104,11 +111,26 @@ export default class App extends Component {
         this.setState({ showMain: val })
     }
 
+
+    // Pega a lista de categorias no backend        
+    getCategories() {
+        this.setState({loading: true})
+        axios.get(`${baseApiUrl}/categories`)
+            .then(res => this.setState({ categories: res.data }))
+            .then(this.setState({loading: false}))
+            .catch(e => {
+                // Aqui trata algum erro de rede ou não previsto já que o GET de categoria é público.
+                toast.error(e, toastOptions)     
+                this.setState({loading: false})           
+                }
+            )
+    }
+
     
     render() {        
         const mainContent = []        
 
-        if(this.state.validatingToken)
+        if(this.state.validatingToken || this.state.loading)
             return <div className="loadiv"><img src={loadingImg} className="loading"/></div>
                 
         else {
@@ -126,6 +148,7 @@ export default class App extends Component {
                         login={ {get: this.state.isLogged, set: this.handleLoginChange, register: this.state.regfix, setReg: val => this.setState({regfix: val})  } } 
                         user={ {get: this.state.user, set: this.handleUserChange} } 
                         mainContent={ {get: this.state.showMain, set: this.handleShowMainChange} }
+                        categories={ {get: this.state.categories, update: this.getCategories} }
                     />
                     
                     {mainContent}

@@ -76,7 +76,7 @@ export default function AdminPages(props) {
         }
         else { 
             if(props.page === 'categories')
-                selectedPage = <Categories user={props.user} mainContent={props.mainContent} />
+                selectedPage = <Categories user={props.user} mainContent={props.mainContent} categories={props.categories} />
             else return <Redirect to='/' />
         }
     }

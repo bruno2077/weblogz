@@ -14,11 +14,15 @@ module.exports = app => {
         try {
             existsOrError(category.name, 'Nome da categoria não informado')       
             const catByName = await app.db('categories').where({name: category.name}).first()
-            if(req.params.id && catByName) {                
-                if(parseInt(req.params.id) === catByName.id) { // Se mandou alterar pro mesmo nome que já está, responde OK sem acessar o BD novamente.
-                    return res.status(200).send("Categoria atualizada com sucesso")
+            
+            // Aqui trata um caso especial onde se tenta atualizar uma categoria pra o mesmo nome que já está. Não é pra dar erro nem 
+            // mensagem de atualização. Nem acessa o DB.
+            if(req.params.id && catByName) { 
+                if(parseInt(req.params.id) === catByName.id) {
+                    return res.status(200).send("")
                 }
             }
+            // Nome de categoria não pode repetir
             notExistsOrError(catByName, 'Categoria já existente')
         } catch(msg) {
             return res.status(400).send(msg)

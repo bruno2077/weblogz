@@ -154,10 +154,8 @@ export default class AdmCategories extends Component {
         // Alteração da categoria
         if(this.state.category.id) {           
             axios.put(`${baseApiUrl}/categories/${this.state.category.id}`, this.state.category)
-                .then(res => {
-                    console.log("res data: ", res.data)
-                    if(res.data) {
-                        console.log("entrou no toast")
+                .then(res => {                    
+                    if(res.data) {                        
                         this.props.categories.update()
                         toast.success(`${res.data}`, toastOptions) // Responde que alterou a categoria.
                     }
@@ -202,12 +200,14 @@ export default class AdmCategories extends Component {
         axios.delete(`${baseApiUrl}/categories/${this.state.category.id}`, this.state.category)
             .then(res => {
                 this.props.categories.update()
-                toast.warning(res.data, { ...toastOptions, autoClose: 3000, pauseOnHover: true }) // Responde que deletou o artigo                
+                toast.warning(res.data, { ...toastOptions, autoClose: 3000 }) // Responde que deletou o artigo                
             })            
             .catch(e => {
-                // Dá erro se tiver artigo cadastrado nessa categoria.
                 this.restart()
-                toast.error(e, toastOptions)
+                // Dá erro se tiver artigo cadastrado nessa categoria.
+                if(e.response)
+                    toast.error(e.response.data, { ...toastOptions, autoClose: 3000 })
+                else toast.error(e, { ...toastOptions, autoClose: 3000 })
             })
     }
 

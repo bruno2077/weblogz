@@ -1,4 +1,3 @@
-
 const admin = require('./admin.js')
 
 module.exports = app => {
@@ -34,7 +33,7 @@ module.exports = app => {
     app.delete('/categories/:id', app.config.passport.authenticate(), admin(app.api.categories.catDelete)) // deleta categoria
 
     // Pra salvar, alterar e deletar artigos o usuário basta estar autenticado, não precisa ser admin.
-    app.get('/articles',app.api.articles.getByX) // get todas categorias conforme os filtros.
+    app.get('/articles', app.config.passport.authenticate(), app.api.articles.getByX) // get todas categorias conforme os filtros.
     app.post('/articles', app.config.passport.authenticate(), app.api.articles.save) // adiciona artigo    
     app.put('/articles/:id', app.config.passport.authenticate(), app.api.articles.save) // altera artigo
     app.delete('/articles/:id', app.config.passport.authenticate(), app.api.articles.artDelete) // deleta artigo

@@ -7,32 +7,22 @@ body {
     background-color: #EEF2FF;
     color: #34345C;
 }
-#root {
-    display: grid;
-    grid-template-areas: 
-    'Header Header'
-    'Section Section'
-    'Main Aside'
-    'Footer Footer';
-    grid-template-columns: 75% 1fr;
-}
 
-#root > section { /* Este é o routes.jsx */
-    grid-area: Section;
+#root > main { /* Este é o routes.jsx */    
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 20px 0px 20px 0px;
 }
 
-#root > .loadiv{
+#root > .loading_div{
     width: 100vw;
     height: 100vh;
     display: flex;    
     justify-content: center;
     align-items: center;
 }
-.loading {
+.loading_img {
     width: 150px;
     height: 150px;    
 }

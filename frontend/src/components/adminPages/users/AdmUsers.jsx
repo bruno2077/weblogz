@@ -99,10 +99,6 @@ export default class AdmUsers extends Component {
     
     componentDidMount() {
         console.log("Adm Users montado.")
-
-        if(this.props.mainContent.get) // Garante que não carrega Main e Aside enquanto nas páginas administrativas.
-            this.props.mainContent.set(false)       
-
         // Carrega lista de usuários do backend e monta a tabela. Essa função já faz uma validação do token do usuário no backend.
         this.getUsers() 
     }
@@ -288,10 +284,9 @@ export default class AdmUsers extends Component {
             },
             isUserLoaded: true,
             isNewUser: false
-        })
-        console.log("carregado: ", this.state.user)
-        // Função pra destacar o usuário selecionado da tabela        
-        selectedRowToggler(e.currentTarget)
+        })        
+        
+        selectedRowToggler(e.currentTarget) // Função pra destacar o usuário selecionado da tabela        
     }
 
     // Pega a resposta do backend contendo um array de usuários e transforma isso numa tabela de usuários.

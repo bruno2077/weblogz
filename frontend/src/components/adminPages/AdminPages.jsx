@@ -22,7 +22,7 @@ function tabToggler(ev, page) {
             ev.target.classList.add("active")
         }
         // on mount de admPages: coloca o estilo na tab certa quando carregar a url
-        else {
+        else {            
             let index = null
             if(page === undefined || page === "users")
                 index = 0
@@ -40,23 +40,12 @@ function tabToggler(ev, page) {
 }
 
 
-export default function AdminPages(props) {
-    // Esconde o conteúdo principal (main e aside) ao carregar esse componente. Reaparece ao desmontar esse componente.
-    useEffect( () => {
-        // roda quando monta
-        console.log("admPages carregado")
-        tabToggler(null, props.page)
-        if(props.mainContent.get) 
-            props.mainContent.set(false)
-          
-        // roda quando desmonta
-        return () => { 
-            //console.log("admPages DEScarregado")
-            props.mainContent.set(true)
-        }
+export default function AdminPages(props) {         
+    useEffect(() => {        
+        tabToggler( null, props.page) // bota estilo na tab correspondente a página atual
     }, [])
-    
-    
+
+
     // controle de acesso. Se não tem user ou se user não é admin redireciona.
     if(props.user.get) { // Usuário logado, verificando se é admin.
         if(!props.user.get.admin)
@@ -69,18 +58,17 @@ export default function AdminPages(props) {
     let selectedPage
     // /admin também carrega /admin/users
     if(!props.page || props.page === 'users') 
-        selectedPage = <AdmUsers user={props.user} mainContent={props.mainContent}/>
+        selectedPage = <AdmUsers user={props.user} />
     else {
-        if(props.page === 'articles') {           
-            selectedPage = <Articles user={props.user} mainContent={props.mainContent} />
+        if(props.page === 'articles') {
+            selectedPage = <Articles pagOptions={props.pagOptions} user={props.user} categories={props.categories}/>
         }
         else { 
             if(props.page === 'categories')
-                selectedPage = <Categories user={props.user} mainContent={props.mainContent} categories={props.categories} />
+                selectedPage = <Categories user={props.user} categories={props.categories} />
             else return <Redirect to='/' />
         }
     }
-
     
     return (
         <div className="col-12 col-sm-10" >

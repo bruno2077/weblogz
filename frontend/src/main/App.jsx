@@ -1,9 +1,6 @@
 import './App.css'
 import Header from '../components/templates/Header'
-import Main from '../components/templates/Main'
-import Aside from '../components/templates/Aside'
 import Footer from '../components/templates/Footer'
-
 import { isValidToken, userKey, avatarKey, toastOptions, baseApiUrl } from '../global'
 import { Component } from 'react'
 import axios from 'axios'
@@ -11,16 +8,22 @@ import {BrowserRouter as Router} from 'react-router-dom'
 import Routes from '../main/Routes'
 import defaultAvatar from '../assets/img/defaultAvatar.png'
 import loadingImg from '../assets/img/loading.gif'
-
 import { ToastContainer, toast } from 'react-toastify';
 
-
+// Define algumas opções de paginação
+const defaultPagOptions = {
+    recent: true, // A coluna de ordenação das páginas públicas. Se ordena por data de atalização ou por data de postagem.
+    limit: 5, // Qtde por página da lista de artigos.
+    tLimit: 5, //Qtde por página da tabela de artigos. usado em '/perfil' e '/adm/articles'.
+    asc: false, // se ordena o resultado ascendente ou descendente.
+    col: "updated_at", // A coluna de ordenação das páginas restritas. Pode ser qualquer uma.
+}
 export default class App extends Component {
     constructor(props) {
         super(props)
         this.handleLoginChange = this.handleLoginChange.bind(this)
         this.handleUserChange = this.handleUserChange.bind(this)
-        this.handleShowMainChange = this.handleShowMainChange.bind(this)
+        this.handlePaginationChange = this.handlePaginationChange.bind(this)        
         this.getCategories = this.getCategories.bind(this)
         this.state = {
             validatingToken: true, // Se está validando token no backend. 
@@ -28,8 +31,10 @@ export default class App extends Component {
             isLogged: null, // Se o usuário está ou não logado.
             regfix: false, // faz o toggle do form no /login
             user: null, // o componentDidMount q carrega o usuário
-            categories: null, // o componentDidMount q carrega as categorias
-            showMain: true // renderiza ou não o main e o aside
+            categories: null, // o componentDidMount q carrega as categorias            
+            paginationOptions: { // Opções de paginação enviadas para componentes filhos no acesso ao backend.
+                ...defaultPagOptions
+            }
         }
     }
     
@@ -69,14 +74,25 @@ export default class App extends Component {
 
         // seta loading true, busca categorias no back, ready, loading false.
         this.getCategories()
-        
     }    
 
-
-    getDefaultAvatarAsDataURL() {
-
-        // return AvatarDataURL
-    }
+    // Os valores que são mandados pra cá precisam ter ao menos o tipo validado.
+    // Tem q mudar isso. tá mudano só recent e limit
+    handlePaginationChange(obj) {        
+        if(obj) // Alteração
+            this.setState({
+                paginationOptions: {
+                    ...this.state.paginationOptions,
+                    ...obj                    
+                }
+            })
+            
+        else {  // Reset pro default
+            this.setState({
+                paginationOptions: {...defaultPagOptions}
+            })
+        }        
+    }    
 
 
     // Tanto seta quanto remove o usuário: Põe o usuário no localStorage, monta um objeto this.state.user (que é usado em toda aplicação),
@@ -107,37 +123,27 @@ export default class App extends Component {
     handleLoginChange(val) {
         this.setState({ isLogged: val })
     }
-    handleShowMainChange(val) {
-        this.setState({ showMain: val })
-    }
-
+    
 
     // Pega a lista de categorias no backend        
-    getCategories() {
+    async getCategories() {
         this.setState({loading: true})
-        axios.get(`${baseApiUrl}/categories`)
-            .then(res => this.setState({ categories: res.data }))
-            .then(this.setState({loading: false}))
+        await axios.get(`${baseApiUrl}/categories`)
+            .then(res => this.setState({ categories: res.data }))            
             .catch(e => {
                 // Aqui trata algum erro de rede ou não previsto já que o GET de categoria é público.
-                toast.error(e, toastOptions)     
-                this.setState({loading: false})           
+                toast.error(e, toastOptions)
                 }
             )
+        this.setState({loading: false})
     }
 
     
-    render() {        
-        const mainContent = []        
-
+    render() {
         if(this.state.validatingToken || this.state.loading)
-            return <div className="loadiv"><img src={loadingImg} className="loading"/></div>
+            return <div className="loading_div"><img src={loadingImg} className="loading_img"/></div>
                 
-        else {
-            if(this.state.showMain) {
-                mainContent.push(<Main key="1"/>)
-                mainContent.push(<Aside key="2"/>)                
-            }
+        else {           
             return (
                 <Router>                    
                     <Header 
@@ -146,13 +152,10 @@ export default class App extends Component {
                     />
                     <Routes
                         login={ {get: this.state.isLogged, set: this.handleLoginChange, register: this.state.regfix, setReg: val => this.setState({regfix: val})  } } 
-                        user={ {get: this.state.user, set: this.handleUserChange} } 
-                        mainContent={ {get: this.state.showMain, set: this.handleShowMainChange} }
+                        user={ {get: this.state.user, set: this.handleUserChange} }                         
                         categories={ {get: this.state.categories, update: this.getCategories} }
+                        pagOptions={ {get: this.state.paginationOptions, set: this.handlePaginationChange}}                        
                     />
-                    
-                    {mainContent}
-
                     <Footer/>
                     <ToastContainer/>
                 </Router>

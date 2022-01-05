@@ -8,6 +8,7 @@ import {baseApiUrl, toastOptions } from '../../../global'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Função pra destacar a categoria selecionada da tabela
 function selectedRowToggler(tr) {
     const rows = document.getElementsByClassName("categoryRow")
     if(rows.length) {
@@ -79,16 +80,11 @@ export default class AdmCategories extends Component {
     }
 
     componentDidMount() {
-        console.log("Adm Categories montado.")
-
-        if(this.props.mainContent.get) // Garante que não carrega Main e Aside enquanto nas páginas administrativas.
-            this.props.mainContent.set(false)       
-
-        // Monta a tabela de categorias
-        this.categoriesToTable()
+        console.log("Adm Categories montado.")        
+        this.categoriesToTable() // Monta a tabela de categorias
     }
 
-    // Pega os dados digitados no input name e põe no objeto category daqui.
+    // Pega os dados digitados no input name e põe no objeto category do state.
     handleChange(ev) {
         this.setState({
             category: { 
@@ -142,10 +138,9 @@ export default class AdmCategories extends Component {
                 id: categoryData[0]
             },
             isCategoryLoaded: true            
-        })
-        console.log("carregado: ", this.state.category)
-        // Função pra destacar a categoria selecionada da tabela
-        selectedRowToggler(e.currentTarget)
+        })        
+        
+        selectedRowToggler(e.currentTarget) // Função pra destacar a categoria selecionada da tabela
     }
    
 
@@ -224,7 +219,7 @@ export default class AdmCategories extends Component {
         }
         else catTitle = "Nova categoria"
 
-        console.log("renderiza category adm")
+        
         return (
             <div>                
                 {/* Título */}

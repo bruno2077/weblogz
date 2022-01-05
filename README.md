@@ -2,7 +2,7 @@
 **Status do Projeto: Em construção.**
 
 ## Descrição
-Weblogz é um blog com cadastro de usuários, artigos e categorias de artigos. No momento apenas o CRUD de usuários está pronto, incluindo a parte de autenticação e controle de acesso. Tanto no back-end quanto no front-end falta o CRUD de categorias de artigos e de artigos. No front-end falta ainda o estilo (CSS) final. O projeto está sendo desenvolvido com o Node e Express no back-end e React.js no Front-end.
+Weblogz é um blog multi autor com cadastro de usuários, artigos e categorias de artigos. No momento todas as funcionalidades estão prontas faltando apenas finalizar a parte visual (HTML/CSS/Bootstrap). O projeto está sendo desenvolvido com Node e Express no back-end e React.js no Front-end.
 
 ## Pré Requisitos
 Pra instalar todas as dependências, lidar com o banco de dados e executar o servidor back-end é necessário ter o Node.js(v14.17.6), o npm(6.14.15) e o Postgresql (13.3) instalados na máquina as versões entre parêntesis foram as utilizadas no projeto. O servidor roda na porta 3005. Para instalar e rodar o front-end é necessário o Node.js e o npm. O front-end roda na porta 3000.
@@ -33,11 +33,12 @@ Inicialmente, no back-end devemos criar um usuário administrador diretamente no
  admin     | boolean                  | not null | false
  deletedAt | timestamp with time zone |          |</pre>
 
-Criado um usuário administrador no back-end já podemos logar com ele no front-end e ter acesso a todo o site. O usuário administrador pode criar outros usuários administradores ou não, alterar seu próprio usuário, excluir qualquer usuário inclusive a si próprio mas é recomendado sempre ter ao menos um usuário administrador caso contrário só pelo SGBD será possível criar um usuário administrador. Pela URL pública de cadastro só são criados usuários comuns.
+Criado um usuário administrador no back-end já podemos logar com ele no front-end e ter acesso a toda a aplicação. O usuário administrador pode criar outros usuários administradores ou não, alterar seu próprio usuário, excluir qualquer usuário inclusive a si próprio mas é recomendado sempre ter ao menos um usuário administrador caso contrário só pelo SGBD será possível criar um usuário administrador. Pela URL pública de cadastro só são criados usuários comuns.
 
-Usuários comuns tem acesso ao editor de texto (pra escrever os artigos futuramente) e a página /home que é onde eles podem editar seu próprio cadastro apenas.
+Usuários administradores também tem acesso a página de administração de usuários, artigos e categorias de artigos, onde todos estes dados são listados. Administradores podem alterar, criar, e excluir qualquer usuário, artigo ou categoria de artigo mas uma categoria de artigo só pode ser removida se esta não contém nenhum artigo nela. Artigos podem ser modificados, excluídos ou despublicados mas a autoria do artigo é sempre do usuário que o criou. Um usuário também só pode ser removido se não tem nenhum artigo em seu nome.
 
-Usuários administradores também tem acesso a página de administração de usuários onde é listado todos os usuários cadastrados e podem criar, alterar e deletar qualquer usuário incluindo a si próprios.
+Usuários não cadastrados tem acesso somente leitura a todos os artigos publicados. Usuários comuns cadastrados além de terem acesso a todos os artigos publicados têm também a página /perfil onde eles podem editar seu próprio cadastro e ver, editar e excluir os artigos de sua autoria publicados ou não. Os artigos são ou não publicados no momento da criação onde podem serem salvos como rascunho ou salvos como já publicado.
+
 
 ## Screenshots
 <h4>Introdução</h4>
@@ -59,7 +60,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - SQL/Knex/Postgresql
 - JSON Web Token
 - React.js
-- Draft Wysiwyg
+- React Draft Wysiwyg
 - React Router
 - Bootstrap
 

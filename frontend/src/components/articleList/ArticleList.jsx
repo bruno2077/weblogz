@@ -3,6 +3,7 @@
 
 import { Component } from 'react'
 import { Link } from 'react-router-dom'
+import './ArticleList.css'
 
 
 export default class ArticleList extends Component {
@@ -138,24 +139,76 @@ export default class ArticleList extends Component {
         }
     }
 
+    categoryNameFromId(id) {
+        const category = this.props.categories.get
+        let categoryName = ""
+        category.forEach(el => {            
+            if(el.id === id ) {
+                categoryName = el.name
+                return
+            }
+        })
+        return categoryName
+    }
+
     render() {
-        let title
+        let title = <h2>Feed</h2>
         let currentPage = this.props.content.pagination.page
         let totalPages = Math.ceil(this.props.content.pagination.count / this.props.content.pagination.limit)
 
         if(this.props.content.category) // Lista de artigos de 1 categoria.
             title = <h2>{this.props.content.category}</h2>
 
-        const articles = []
+            
+        // const articles = []
+        // this.state.content.data.forEach( (el, idx) => {
+        //     articles.push(<h3 key={`artigo${idx}`}>{`${el.title}`}</h3>)
+        //     for(let item in el) {                
+        //         if(item === "authoravatar")
+        //             articles.push(<img key={`${item}${idx}`} src={el[item]}></img>)
+        //         else articles.push(<p key={`${item}${idx}`}>{`${item}: ${el[item]}`}</p>)
+        //     }
+        // })
 
-        this.state.content.data.forEach( (el, idx) => {
-            articles.push(<h3 key={`artigo${idx}`}>{`${el.title}`}</h3>)
-            for(let item in el) {                
-                if(item === "authoravatar")
-                    articles.push(<img key={`${item}${idx}`} src={el[item]}></img>)
-                else articles.push(<p key={`${item}${idx}`}>{`${item}: ${el[item]}`}</p>)
-            }
-        })
+
+
+        // HERE IS WHERE THE MAGIC HAPPENS        
+        let articles = []
+        let categoryTag = "" 
+        let dates = ""
+        let createdAt, updatedAt
+        if(this.props.categories.get) {
+            this.state.content.data.forEach( (el, idx) => {
+                categoryTag = this.props.content.category ? 
+                    "" : <Link to={`/categories/${el.categoryId}`}>{`<${this.categoryNameFromId(el.categoryId).toUpperCase()}>`}</Link>
+                
+                createdAt = new Date(el.created_at)               
+                
+                if(`${el.created_at}` !== `${el.updated_at}`) {
+                    updatedAt = new Date(el.updated_at)
+                    dates = `Criado em: ${createdAt.toLocaleDateString()} atualizado em: ${updatedAt.toLocaleDateString()}`
+                }
+                else dates = `Criado em: ${createdAt.toLocaleDateString()}`
+
+                //dates = <span>{`Publicado em: ${}`}</span>
+                articles.push(
+                    <div key={idx} className='article-briefing'>
+                        <span className='category-tag'>{categoryTag}</span>
+                        <h3 className='article-title'><Link to={`/articles/${el.id}`}>{`${el.title}`}</Link></h3>
+                        <div className='who-when'>
+                            <img className='author-avatar' src={el.authoravatar} alt='avatar do autor'/>
+                            <div>
+                                <span className='author'>{`Postado por: ${el.author}`}</span><br/>                            
+                                <span className='posted-dates'>{dates}</span>
+                            </div>
+                        </div>
+                        <p className="article-description">{el.description}</p>
+                    </div>
+                )                
+            })
+        }       
+        // EOF
+
 
         if(!articles.length) {
             if(!this.props.content.q)
@@ -163,11 +216,14 @@ export default class ArticleList extends Component {
             else articles.push(<p key="1">Nenhum artigo encontrado com o termo "{this.props.content.q}"</p>)
         }
 
-        return (
-            <main  className="col-12 col-md-8 col-lg-9 col-xl-10">
+        return (            
+            <main className="col-12 col-md-8 col-xl-9">
+
                 {title}
 
-                {articles}
+                <div className='container-da-lista-de-artigos'>
+                    {articles}
+                </div>
                 
                 <div className='d-flex'>
                     

@@ -223,8 +223,8 @@ export default class Articles extends Component {
 
         const paginas = [] // primeira coisa é adicionar a primeira página. SE for a currentPage mete um selected.
         if(currentPage === 1 )
-            paginas.push(<li key="1" className='page-item active' aria-current="page"><a className='page-link' href="#" onClick={e => this.handlePageChange(e)}>1</a></li>)
-        else paginas.push(<li key="1" className='page-item'><a className='page-link' href="#" onClick={e => this.handlePageChange(e)}>1</a></li>)
+            paginas.push(<li key="1" className='page-item active' aria-current="page"><a className='page-link' href="/#" onClick={e => this.handlePageChange(e)}>1</a></li>)
+        else paginas.push(<li key="1" className='page-item'><a className='page-link' href="/#" onClick={e => this.handlePageChange(e)}>1</a></li>)
 
 
         if(totalPages > 2) {
@@ -268,35 +268,35 @@ export default class Articles extends Component {
             // Primeiro printa os na esquerda
             for(let i = leftAmount; i > 0; i--) {   
                 if(i === leftAmount && (currentPage - i - 1) > 1)                    
-                    paginas.push(<li key="farleft" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
+                    paginas.push(<li key="farleft" className='page-item disabled'><a className='page-link' href="/#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
 
-                paginas.push(<li key={currentPage - i} className='page-item'><a className='page-link' href="#" onClick={e => this.handlePageChange(e)}>{currentPage - i}</a></li>)
+                paginas.push(<li key={currentPage - i} className='page-item'><a className='page-link' href="/#" onClick={e => this.handlePageChange(e)}>{currentPage - i}</a></li>)
             }
 
             //Agora renderiza a pagina atual se esta não for nem a 1ª e nem a última.
             if(currentPage !== 1 && currentPage !== totalPages ) {                
-                paginas.push(<li key={currentPage} className='page-item active'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{currentPage}</a></li>)
+                paginas.push(<li key={currentPage} className='page-item active'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{currentPage}</a></li>)
             }
 
             // Em seguida renderiza os na direita
             for(let i = 1; i <= rightAmount; i++) {
-                paginas.push(<li key={currentPage + i} className='page-item'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{currentPage + i}</a></li>)
+                paginas.push(<li key={currentPage + i} className='page-item'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{currentPage + i}</a></li>)
                 if(i === rightAmount && (currentPage + i + 1) < totalPages)                    
-                    paginas.push(<li key="farright" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
+                    paginas.push(<li key="farright" className='page-item disabled'><a className='page-link' href="/#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
             }
             
             // Por fim renderiza a última página seja a atual ou não.
             if(totalPages === currentPage)                
-                paginas.push(<li key={totalPages} className='page-item active'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{totalPages}</a></li>)
+                paginas.push(<li key={totalPages} className='page-item active'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{totalPages}</a></li>)
             else {
-                paginas.push(<li key={totalPages} className='page-item'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{totalPages}</a></li>)
+                paginas.push(<li key={totalPages} className='page-item'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{totalPages}</a></li>)
             }
         }
         else if(totalPages === 2) 
             if(totalPages === currentPage)                
-                paginas.push(<li key={2} className='page-item active'><a className='page-link' href='#' onClick={e => this.handlePageChange(e) }>{2}</a></li>)
+                paginas.push(<li key={2} className='page-item active'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e) }>{2}</a></li>)
             else {                
-                paginas.push(<li key={2} className='page-item'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{2}</a></li>)
+                paginas.push(<li key={2} className='page-item'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{2}</a></li>)
             }
 
         

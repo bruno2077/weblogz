@@ -10,6 +10,7 @@ export default function Header(props) {
     console.log("Header carregado")
      
     const buttons = []
+    const btnNewArticle = props.user.get ? <Link to="/articles/new" className="new-article btn btn-light mt-4 fw-bold" role="button">Escreva um artigo</Link> : ""
     
     if(props.user.get) {
         const {name, admin, avatar} = props.user.get
@@ -34,9 +35,9 @@ export default function Header(props) {
                 {buttons}
             </nav>
             <div className='logo'>
-                <h1><Link to='/'>Weblogz</Link></h1>
-                {/* <span className='protip'>As histórias e informações postadas aqui são obras artísticas de ficção e inverdade. Só um tolo tomaria qualquer coisa postada aqui como um fato.</span> */}
+                <h1><Link to='/'>Weblogz</Link></h1>                
                 <span className='protip'>Blog de todos. Terra de ninguém. Cadastre-se, publique-se, arque com as consequências, sucesso!</span>
+                {btnNewArticle}
             </div>
         </header>
     )    

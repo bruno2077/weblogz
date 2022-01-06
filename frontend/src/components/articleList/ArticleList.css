@@ -1,0 +1,51 @@
+.article-briefing {
+    margin-bottom: 20px;
+    padding: 5px;
+    /* background-color: #FFF; */
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+}
+.article-briefing:hover {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.article-title a, .article-title a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+.article-title a:hover {    
+    color: #0B5ED7;
+}
+
+.category-tag {
+    font-size: 0.7rem;
+    color: #777;
+}
+.category-tag a, .category-tag a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+.category-tag a:hover {    
+    color: #222;
+}
+
+.who-when {
+    display: flex;    
+    align-items: center;
+    font-size: 0.8rem;
+    color: #777;
+}
+
+.author-avatar{
+    border-radius: 4px;
+    width: 40px;
+    margin-right: 5px;
+}
+
+.author, .posted-dates {
+    margin-right: 5px;
+}
+
+.article-description {
+    margin-top: 10px;
+}

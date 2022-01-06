@@ -24,15 +24,8 @@ const initialStateArticle = {
     categoryId: 0  
 }
 
-export default class Article extends Component {
-    constructor(props) {
-        super(props)
-        this.handleContentChange = this.handleContentChange.bind(this)
-        this.state = {
-            readOnly: this.props.editorMode ? false : true,
-            loggedUser: false,
-            adminOrAuthor: false,
-            isNew: this.props.id === 'new' ? true : false, // quando ainda não tem ID.
+const initialState = {
+    adminOrAuthor: false,
             loading: true, // pegando arquivo no backend.
             validatingToken: true, // validando token de usuário no backend.
             redir: false, // Se tentar criar artigo sem estar logado ou descartar artigo na criação de novo artigo redireciona.            
@@ -43,6 +36,16 @@ export default class Article extends Component {
             },
             error: null, // No caso de não encontrar o artigo, a mensagem de erro vem aqui.
             temp: { ...initialStateArticle } // usado pra alterar dados do artigo. Se modificar e descartar as alterações, os dados originais estão em this.state.articles.
+}
+
+export default class Article extends Component {
+    constructor(props) {
+        super(props)
+        this.handleContentChange = this.handleContentChange.bind(this)
+        this.state = {
+            ...initialState,
+            readOnly: this.props.editorMode ? false : true, // Se exibe o artigo no modo leitura ou no modo edição.
+            isNew: this.props.id === 'new' ? true : false, // quando ainda não tem ID.
         }
     }
 
@@ -72,13 +75,57 @@ export default class Article extends Component {
                     if(!this.state.readOnly) // Se já monta o componente no modo edição, carrega os dados no formulário.
                         this.toEditorMode()
                 })
-                .then(_ => this.setState({loading: false}))
-                
+                .then(_ => this.setState({loading: false}))                
             }
 
             // Se id não numérico ou 0 nem tenta buscá-lo no backend, é inválido. Redireciona pro '/'
             else this.setState({redir: true})
         }        
+    }
+
+    componentDidUpdate(prevProps) {
+        if(this.props.id !== prevProps.id) {            
+            this.refresh()
+        }
+    }
+
+    // Essa função roda toda vez que mudar de artigo sem recarregar a página, seja pra outro artigo ou pra novo artigo.
+    async refresh() {
+        await this.setState({
+            ...initialState, 
+            readOnly: this.props.editorMode ? false : true,
+            isNew: this.props.id === 'new' ? true : false 
+        })
+        
+        if(this.state.isNew) { 
+            this.setState({loading: false}) // não tem artigo pra carregar.
+            this.userCheck() //verifica o usuário, se não está logado redireciona.
+        }
+        
+        // Artigo já existente. Puxa dados do artigo(se existir), do autor, e verifica permissões do usuário.
+        else { 
+            // Se Id numérico, procura no backend e continua.
+            if(parseInt(this.props.id)) {
+                const settings = new Promise(resolve => {
+                    resolve(this.getArticle(parseInt(this.props.id)) )
+                })
+                settings.then( async res => {
+                    if(this.state.error) // Se não encontrou artigo não precisa validar token de usuário no backend.
+                        this.setState({validatingToken: false})
+                    else {
+                        await this.userCheck() // Verifica se o usuário é autor ou admin, se for tem permissão pra editar e visualizar o artigo caso não esteja publicado.
+                    }
+                })
+                .then(_ => {
+                    if(!this.state.readOnly) // Se já monta o componente no modo edição, carrega os dados no formulário.
+                        this.toEditorMode()
+                })
+                .then(_ => this.setState({loading: false}))                
+            }
+
+            // Se id não numérico ou 0 nem tenta buscá-lo no backend, é inválido. Redireciona pro '/'
+            else this.setState({redir: true})
+        }  
     }
 
     // Get de 1 artigo pelo id
@@ -110,8 +157,8 @@ export default class Article extends Component {
     
             await verifyToken.then(res => {
                 if(res) { //token válido. continua.  
-                    this.setState({ loggedUser: true })
-                    if(this.state.isNew) { // Se o artigo é novo o usuário logado é o autor e já abre no modo edição.
+                    // Se o artigo é novo então o usuário logado é o autor e já abre no modo edição.
+                    if(this.state.isNew) { 
                         this.setState({adminOrAuthor: true, readOnly: false})
                     }
 
@@ -303,7 +350,7 @@ export default class Article extends Component {
 
 
     // a página no modo só de leitura
-    readMode() {
+    readMode() {        
         const categoryName = this.getCategoryName(this.state.article.categoryId)
         let breadcrumb = <p></p>
         if(!this.state.isNew) {

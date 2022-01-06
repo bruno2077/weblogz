@@ -66,3 +66,6 @@ nav {
     display: block;    
     text-align: center;    
 }
+.new-article:hover{
+    color: #0B5ED7;
+}

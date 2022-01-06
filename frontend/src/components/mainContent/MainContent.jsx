@@ -112,20 +112,13 @@ export default class MainContent extends Component {
 
         if(this.state.loading) {
             return <div className="loading_div"><img src={loadingImg} className="loading_img"/></div>
-        }        
-
-        let writeAnArticle = ""
-        if(this.props.user.get)
-            writeAnArticle = <p className="fw-bolder text-center fs-5"><Link to="/articles/new" className="text-decoration-none">Escreva um Artigo</Link></p>
-
-        return (
-            <div className="container">
-                <div className="row align-items-start justify-content-start">
-                    {writeAnArticle}
+        }
+        
+        return (            
+                <div className="row pt-3">
                     <ArticleList content={this.state.content} user={this.props.user} categories={this.props.categories} pagOptions={this.props.pagOptions}/>                    
                     <Aside categories={this.props.categories} />
-                </div>
-            </div>
+                </div>            
         )
     }
 }

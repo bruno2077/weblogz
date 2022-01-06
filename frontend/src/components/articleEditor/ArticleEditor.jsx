@@ -19,6 +19,15 @@ export default class ArticleEditor extends Component {
     componentDidMount() {
         console.log("Editor Montado")     
     }
+    componentDidUpdate(prevProps) {
+        if(this.props.readOnly !== prevProps.readOnly) {
+            const newContentState = this.props.content ? convertFromRaw(this.props.content) : null
+            this.setState({
+                contentState: newContentState,
+                editorState: newContentState ? EditorState.createWithContent(newContentState) : EditorState.createEmpty()
+            })
+        }
+    }
 
     onEditorStateChange = (editorState) => {
         this.setState({

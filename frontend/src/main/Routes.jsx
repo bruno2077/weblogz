@@ -33,7 +33,7 @@ const Routes = props => {
     console.log("Routes executado")
 
     return(
-        <main>
+        <div className="container my-4 col-12 col-sm-11 col-md-10">
             <Switch>
                 <Route exact path='/'>
                     <MainContentWithOptions pagOptions={props.pagOptions} user={props.user} categories={props.categories}/>                    
@@ -65,7 +65,7 @@ const Routes = props => {
                     <MainContent user={props.user} categories={props.categories} pagOptions={props.pagOptions}/>
                 </Route>
             </Switch>
-        </main>
+        </div>
     )
 }
 

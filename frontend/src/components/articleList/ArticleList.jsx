@@ -36,10 +36,10 @@ export default class ArticleList extends Component {
         let leftOverplus = 0
         let rightOverplus = 0
 
-        const paginas = [] // primeira coisa é meter a primeira página. SE for a currentPage mete um selected.
+        const pages = [] // primeira coisa é criar a primeira página. SE for a currentPage mete um selected.
         if(currentPage === 1 )
-            paginas.push(<li key="1" className='page-item active' aria-current="page"><Link className='page-link' to={`${window.location.pathname}?page=${1}`}>1</Link></li>)
-        else paginas.push(<li key="1" className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${1}`}>1</Link></li>)
+            pages.push(<li key="1" className='page-item active' aria-current="page"><Link className='page-link' to={`${window.location.pathname}?page=${1}`}>1</Link></li>)
+        else pages.push(<li key="1" className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${1}`}>1</Link></li>)
 
 
         if(totalPages > 2) {
@@ -83,42 +83,42 @@ export default class ArticleList extends Component {
             // Primeiro printa os na esquerda
             for(let i = leftAmount; i > 0; i--) {   
                 if(i === leftAmount && (currentPage - i - 1) > 1)                    
-                    paginas.push(<li key="farleft" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
+                    pages.push(<li key="farleft" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
 
-                paginas.push(<li key={currentPage - i} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${currentPage - i}`}>{currentPage - i}</Link></li>)
+                pages.push(<li key={currentPage - i} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${currentPage - i}`}>{currentPage - i}</Link></li>)
             }
 
             //Agora renderiza a pagina atual se esta não for nem a 1ª e nem a última.
             if(currentPage !== 1 && currentPage !== totalPages ) {                
-                paginas.push(<li key={currentPage} className='page-item active'><Link className='page-link' to={`${window.location.pathname}?page=${currentPage}`}>{currentPage}</Link></li>)
+                pages.push(<li key={currentPage} className='page-item active'><Link className='page-link' to={`${window.location.pathname}?page=${currentPage}`}>{currentPage}</Link></li>)
             }
 
             // Em seguida renderiza os na direita
             for(let i = 1; i <= rightAmount; i++) {
-                paginas.push(<li key={currentPage + i} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${currentPage + i}`}>{currentPage + i}</Link></li>)
+                pages.push(<li key={currentPage + i} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${currentPage + i}`}>{currentPage + i}</Link></li>)
                 if(i === rightAmount && (currentPage + i + 1) < totalPages)                    
-                    paginas.push(<li key="farright" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
+                    pages.push(<li key="farright" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
             }
             
             // Por fim renderiza a última página seja a atual ou não.
             if(totalPages === currentPage)                
-                paginas.push(<li key={totalPages} className='page-item active'><Link className='page-link' to={`${window.location.pathname}?page=${totalPages}`}>{totalPages}</Link></li>)
+                pages.push(<li key={totalPages} className='page-item active'><Link className='page-link' to={`${window.location.pathname}?page=${totalPages}`}>{totalPages}</Link></li>)
             else {
-                paginas.push(<li key={totalPages} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${totalPages}`}>{totalPages}</Link></li>)
+                pages.push(<li key={totalPages} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${totalPages}`}>{totalPages}</Link></li>)
             }
         }
         else if(totalPages === 2) 
             if(totalPages === currentPage)                
-                paginas.push(<li key={2} className='page-item active'><Link className='page-link' to={`${window.location.pathname}?page=${2}`}>{2}</Link></li>)
+                pages.push(<li key={2} className='page-item active'><Link className='page-link' to={`${window.location.pathname}?page=${2}`}>{2}</Link></li>)
             else {                
-                paginas.push(<li key={2} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${2}`}>{2}</Link></li>)
+                pages.push(<li key={2} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${2}`}>{2}</Link></li>)
             }
 
         
         return(
-            <nav className="d-flex align-self-center" aria-label="Navegação da lista de artigos">
-                <ul className="pagination">
-                    {paginas}
+            <nav className="" aria-label="Navegação da lista de artigos">
+                <ul className="pagination pagination-sm m-0">
+                    {pages}
                 </ul>
             </nav>
         )
@@ -158,21 +158,7 @@ export default class ArticleList extends Component {
 
         if(this.props.content.category) // Lista de artigos de 1 categoria.
             title = <h2>{this.props.content.category}</h2>
-
-            
-        // const articles = []
-        // this.state.content.data.forEach( (el, idx) => {
-        //     articles.push(<h3 key={`artigo${idx}`}>{`${el.title}`}</h3>)
-        //     for(let item in el) {                
-        //         if(item === "authoravatar")
-        //             articles.push(<img key={`${item}${idx}`} src={el[item]}></img>)
-        //         else articles.push(<p key={`${item}${idx}`}>{`${item}: ${el[item]}`}</p>)
-        //     }
-        // })
-
-
-
-        // HERE IS WHERE THE MAGIC HAPPENS        
+        
         let articles = []
         let categoryTag = "" 
         let dates = ""
@@ -190,7 +176,6 @@ export default class ArticleList extends Component {
                 }
                 else dates = `Criado em: ${createdAt.toLocaleDateString()}`
 
-                //dates = <span>{`Publicado em: ${}`}</span>
                 articles.push(
                     <div key={idx} className='article-briefing'>
                         <span className='category-tag'>{categoryTag}</span>
@@ -204,49 +189,56 @@ export default class ArticleList extends Component {
                         </div>
                         <p className="article-description">{el.description}</p>
                     </div>
-                )                
+                )
             })
-        }       
-        // EOF
+        }
 
 
         if(!articles.length) {
             if(!this.props.content.q)
                 articles.push(<p key="1">Nenhum artigo encontrado</p>)
             else articles.push(<p key="1">Nenhum artigo encontrado com o termo "{this.props.content.q}"</p>)
+
+            return (
+                <main className="col-12 col-md-8 col-xl-9 pt-5">
+                    {title}
+                    {articles}
+                </main>
+            )
         }
 
         return (            
-            <main className="col-12 col-md-8 col-xl-9">
-
+            <main className="col-12 col-md-8 col-xl-9 pt-5">
                 {title}
-
-                <div className='container-da-lista-de-artigos'>
-                    {articles}
-                </div>
-                
-                <div className='d-flex'>
-                    
-                    <div className='d-flex align-items-center'>
-                        <span className='d-flex align-self-center me-2'>Página</span> 
+                {articles}
+                {/* Paginação */}
+                <div className='d-flex flex-column pagination mt-5'>                    
+                    {/* paginas de artigos */}
+                    <div className='d-flex align-items-center mb-3'>
+                        <span className='me-2'>Página</span>
                         {this.navPaginator(totalPages, currentPage)}
                     </div>
 
-                    {/* Combobox com 3 opções de Limit */}
-                    <label htmlFor="perpage">Por página: 
-                        <select name="limit" id="perpage" value={`${this.props.content.pagination.limit}`} onChange={e => this.handlePaginationChange(e, e.target.name)}>
-                            <option  value="3">3</option>
-                            <option  value="5">5</option>
-                            <option  value="10">10</option>
-                        </select>
-                    </label>
-                    {/* combobox com 2 opções de ordenação. */}
-                    <label htmlFor="orderby">Ordem: </label>
-                    <select name="recent" id="orderby" value={this.props.pagOptions.get.recent ? "1" : "0"} onChange={e => this.handlePaginationChange(e, e.target.name)}>
-                        <option  value="0">Data de publicação</option>
-                        <option  value="1">Data de atualização</option>                        
-                    </select>
-
+                    {/* Opções de paginação */}
+                    <div className='d-flex flex-column flex-sm-row'>
+                        {/* Combobox com 3 opções de Limit */}
+                        <div className='d-flex align-items-center mb-2'>
+                            <span className='me-2'>Por página</span>
+                            <select className="form-select form-select-sm me-4" name="limit" id="perpage" value={`${this.props.content.pagination.limit}`} onChange={e => this.handlePaginationChange(e, e.target.name)}>
+                                <option  value="3">3</option>
+                                <option  value="5">5</option>
+                                <option  value="10">10</option>
+                            </select>
+                        </div>
+                        {/* combobox com 2 opções de ordenação. */}
+                        <div className='d-flex align-items-center mt-2'>
+                            <span className='me-2'>Ordem</span>
+                            <select className="form-select form-select-sm" name="recent" id="orderby" value={this.props.pagOptions.get.recent ? "1" : "0"} onChange={e => this.handlePaginationChange(e, e.target.name)}>
+                                <option  value="0">Data de publicação</option>
+                                <option  value="1">Data de atualização</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </main>
         )

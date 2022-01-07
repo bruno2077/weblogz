@@ -1,0 +1,28 @@
+.breadcrumb {
+    font-family: 'Open sans', sans-serif;
+}
+.breadcrumb a, .breadcrumb a:visited {
+    color: #0B5ED7;
+    font-size: 0.8rem;    
+}
+.breadcrumb span {
+    padding: 0px 5px;
+}
+
+.read-article .author span, .date-info {
+    font-family: 'Open sans', sans-serif;
+    font-size: 0.7rem;
+    color: #777;    
+}
+.read-article .author img {
+    width: 40px;
+    border-radius: 8px;
+}
+.date-info {
+    display: flex;    
+    align-items: center;
+}
+.not-published {
+    font-family: 'Open sans', sans-serif;
+    font-size: 0.7rem;
+}

@@ -3,23 +3,19 @@
 }
 body {
     margin: 0;
-    font-family: arial, helvetica, sans-serif;
-    /* background-color: #EEF2FF; */
-    /* color: #34345C; */
+    font-family: arial, helvetica, sans-serif;    
     background-color: #FFF;
     color: #333;
 }
 
-/* .routes { 
-    margin: 20px 0px 20px 0px;    
-} */
+#root {
+    min-height: 100vh;
+}
 
-#root > .loading_div{
-    width: 100vw;
-    height: 100vh;
+.loading_div {    
     display: flex;    
     justify-content: center;
-    align-items: center;
+    align-items: top;
 }
 .loading_img {
     width: 150px;

@@ -24,8 +24,7 @@ export default class MainContent extends Component {
     }
 
     componentDidMount() {
-        console.log("MainContent montado")
-        
+        console.log("MainContent montado")        
         this.getArticles()
     }
 
@@ -114,11 +113,16 @@ export default class MainContent extends Component {
             return <div className="loading_div"><img src={loadingImg} className="loading_img"/></div>
         }
         
-        return (            
-                <div className="row pt-3">
-                    <ArticleList content={this.state.content} user={this.props.user} categories={this.props.categories} pagOptions={this.props.pagOptions}/>                    
-                    <Aside categories={this.props.categories} />
-                </div>            
+        return (                
+                <div>
+                    <div className="row d-flex d-md-none text-center text-warning bg-dark"> {/* navbar categories */}
+                        <span>categorias...</span>
+                    </div>
+                    <div className="row">                    
+                        <ArticleList content={this.state.content} user={this.props.user} categories={this.props.categories} pagOptions={this.props.pagOptions}/>
+                        <Aside categories={this.props.categories} />
+                    </div>
+                </div>
         )
     }
 }

@@ -1,7 +1,6 @@
 .article-briefing {
     margin-bottom: 20px;
     padding: 5px;
-    /* background-color: #FFF; */
     border-radius: 8px;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
 }
@@ -13,7 +12,7 @@
     text-decoration: none;
     color: inherit;
 }
-.article-title a:hover {    
+.article-title a:hover {
     color: #0B5ED7;
 }
 
@@ -25,12 +24,12 @@
     text-decoration: none;
     color: inherit;
 }
-.category-tag a:hover {    
+.category-tag a:hover {
     color: #222;
 }
 
 .who-when {
-    display: flex;    
+    display: flex;
     align-items: center;
     font-size: 0.8rem;
     color: #777;
@@ -48,4 +47,14 @@
 
 .article-description {
     margin-top: 10px;
+}
+
+.pagination {
+    font-family: 'Open Sans', sans-serif;
+}
+.pagination select {
+    width: auto;
+}
+.pagination span {
+    font-size: 0.9rem;
 }

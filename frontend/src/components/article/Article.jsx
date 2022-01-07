@@ -8,6 +8,7 @@ import { baseApiUrl, isValidToken, toastOptions } from "../../global";
 import loadingImg from '../../assets/img/loading.gif'
 import ArticleEditor from '../articleEditor/ArticleEditor'
 import { Link, Redirect } from "react-router-dom";
+import './Article.css'
 
 
 // Os artigos tem 9 cols: "id", "title", "description", "content", "published", "created_at", "updated_at", "userId", "categoryId".
@@ -45,16 +46,16 @@ export default class Article extends Component {
         this.state = {
             ...initialState,
             readOnly: this.props.editorMode ? false : true, // Se exibe o artigo no modo leitura ou no modo edição.
-            isNew: this.props.id === 'new' ? true : false, // quando ainda não tem ID.
+            isNew: this.props.id === 'new' ? true : false, // Este é o ':id' de quando está criando um artigo.
         }
     }
 
     componentDidMount() {      
         console.log("Article Montado")
         // Novo artigo. Só verifica se o usuário está logado.
-        if(this.state.isNew) { 
+        if(this.state.isNew) {             
             this.setState({loading: false}) // não tem artigo pra carregar.
-            this.userCheck() //verifica o usuário, se não está logado redireciona.
+            this.userCheck() //verifica o usuário, se não está logado redireciona pois não pode criar artigo.
         }
         
         // Artigo já existente. Puxa dados do artigo(se existir), do autor, e verifica permissões do usuário.
@@ -98,7 +99,7 @@ export default class Article extends Component {
         })
         
         if(this.state.isNew) { 
-            this.setState({loading: false}) // não tem artigo pra carregar.
+            this.setState({loading: false, readOnly: false}) // não tem artigo pra carregar.
             this.userCheck() //verifica o usuário, se não está logado redireciona.
         }
         
@@ -150,15 +151,15 @@ export default class Article extends Component {
 
     // Verifica se o usuário é registrado, se é admin ou autor do artigo carregado, e seta alguns estados de acordo.
     async userCheck() {        
-        if(this.props.user.get) {
+        if(this.props.user.get) {            
             const verifyToken = new Promise( resolve => {
                 resolve(isValidToken(this.props.user.get) )
             })
     
-            await verifyToken.then(res => {
+            await verifyToken.then(res => {                
                 if(res) { //token válido. continua.  
                     // Se o artigo é novo então o usuário logado é o autor e já abre no modo edição.
-                    if(this.state.isNew) { 
+                    if(this.state.isNew) {                         
                         this.setState({adminOrAuthor: true, readOnly: false})
                     }
 
@@ -179,22 +180,22 @@ export default class Article extends Component {
                         this.setState({redir: true})
                 }                
             })
-            .then(_ => { // Verifica se o artigo não está publicado, se não tiver só o autor ou admin podem ter acesso.                
+            .then(_ => { // Verifica se o artigo não está publicado, se não tiver só o autor ou admin podem ter acesso.
                 if(!this.state.error && !this.state.isNew && !this.state.article.published && !this.state.adminOrAuthor) {
                     this.setState({error: "Este artigo não está publicado."})
                 }
             })
-            .then(this.setState({ validatingToken: false }))
+            .then(_ => this.setState({ validatingToken: false }))
             .catch( e => { //Erro de rede ou desconhecido.                
                 this.setState({redir: true})
             })
         }
 
-        // se usuário não logado está tentando criar artigo redireciona pro '/'.
+        // se usuário não logado está tentando criar artigo redireciona pro '/' ou se o artigo não está publicado, não acessa.
         else { 
-            if(this.props.id === 'new')  
+            if(this.props.id === 'new' || this.state.article.published)  
                 this.setState({redir: true})
-            else this.setState({validatingToken: false})
+            else this.setState({error: "Este artigo não está publicado.", validatingToken: false})
         }    
     }
 
@@ -352,47 +353,63 @@ export default class Article extends Component {
     // a página no modo só de leitura
     readMode() {        
         const categoryName = this.getCategoryName(this.state.article.categoryId)
-        let breadcrumb = <p></p>
+        let breadcrumb = ""
         if(!this.state.isNew) {
-            breadcrumb = <div><Link to='/'>Home</Link>{" >> "}<Link to={`/categories/${this.state.article.categoryId}`}>{categoryName}</Link></div>
+            breadcrumb = <div className="breadcrumb"><Link to='/'>Home</Link><span>{" / "}</span><Link to={`/categories/${this.state.article.categoryId}`}>{categoryName}</Link></div>
         }
 
-        let btnReadWrite = <p></p>        
+        let btnReadWrite = ""
         if(this.state.adminOrAuthor)
-            btnReadWrite = <p><button onClick={e => this.toEditorMode()}>Editar</button></p>
+            btnReadWrite = <p className="text-center"><button className="btn btn-primary my-2" onClick={e => this.toEditorMode()}>Editar artigo</button></p>
 
         // Lidando com as datas de publicação e atualização.
-        let dateInfo
+        let dateInfo = ""
+        let notPublished = ""
         if(this.state.article.created_at) {// Artigo já foi publicado
             dateInfo = "Publicado em " + this.state.article.created_at.toLocaleDateString() + "."
             if(`${this.state.article.created_at}` !== `${this.state.article.updated_at}`)
                 dateInfo += " Atualizado em " + this.state.article.updated_at.toLocaleDateString() + "."
             if(!this.state.article.published) {
-                dateInfo += " Este artigo não está publicado no momento."
+                notPublished = " Este artigo não está publicado no momento."
             }
         }
-        else { // artigo nunca foi publicado.
-            dateInfo = "Este artigo nunca foi publicado."
+        else { // artigo nunca foi publicado.            
+            notPublished = "Este artigo nunca foi publicado."
         }
         
         return (
-            <div>   
+            <div className="read-article mt-4">   
                 {breadcrumb}                
-                <h2>{this.state.article.title}</h2>
-                <p>{this.state.article.description}</p>
-                <p><img src={this.state.author.avatar} alt="avatar do autor" />  {this.state.author.name} 
-                    {dateInfo}</p>
-                
-                <ArticleEditor content={this.state.article.content} readOnly={true}/> 
+
+                <div className="d-flex flex-column-reverse flex-sm-row justify-content-between">
+                    {/* data na esqerda e avatar na direita */}
+                    <div className="date-info" >
+                        <span>{dateInfo}</span>
+                    </div>
+                    <div className="author">
+                        <img className="" src={this.state.author.avatar} alt="avatar do autor" />
+                        <span className="ms-2">{`Por: ${this.state.author.name}`}</span>
+                    </div>
+                </div>
 
                 {btnReadWrite}
+
+                {/* aviso de artigo não publicado */}
+                <div className="not-published bg-warning text-dark my-2 text-center">
+                    <span>{notPublished}</span>
+                </div>
+
+                <h2>{this.state.article.title}</h2>
+                <p>{this.state.article.description}</p>
+                
+                <ArticleEditor content={this.state.article.content} readOnly={true} onContentStateChange={this.handleContentChange}/>
             </div>
         )
     }
 
     // A página no modo de edição
-    editorMode() {             
-        const title = this.state.isNew ? "Novo Artigo" : "Editar Artigo"
+    editorMode() {
+        const pageTitle = this.state.isNew ? "Novo Artigo" : "Editar Artigo"
         const btnDeleteArticle = this.state.isNew ? "" : <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delArticleModal">Excluir</button>
         // Montagem do combobox de categorias.
         const categoryName = this.getCategoryName(this.state.temp.categoryId)        
@@ -407,13 +424,33 @@ export default class Article extends Component {
         }        
 
         return (
-            <div>                   
-                <h2>{title}</h2>
-                <input type="text" value={this.state.temp.title} name="title" placeholder="Título" onChange={e => this.handleChange(e, e.target.name)}/>
-                <input type="text" value={this.state.temp.description} name="description" placeholder="Descrição" onChange={e => this.handleChange(e, e.target.name)}/>
-                <select className="" name="categoryId" id="categoryList" defaultValue={selectedCat ? this.props.categories.get[selectedCat].id : ""} onChange={e => this.handleChange(e, e.target.name)} >
-                    {categoryOptions}
-                </select>
+            <div className="write-article mt-4">                   
+                <h2>{pageTitle}</h2>
+                {/* Título do artigo */}
+                <div className="mb-3 row">
+                    <label htmlFor="articleTitle" className="form-label col-sm-3 col-md-2 col-form-label">Título</label>
+                    <div className="col-sm-9">
+                        <input type="text" id="articleTitle" className="form-control" value={this.state.temp.title} name="title" onChange={e => this.handleChange(e, e.target.name)} />                        
+                    </div>
+                </div>
+
+                {/* Descrição do artigo */}
+                <div className="mb-3 row">
+                    <label htmlFor="articleDescription" className="form-label col-sm-3 col-md-2 col-form-label">Descrição</label>
+                    <div className="col-sm-9">                        
+                        <input type="text" id="articleDescription" className="form-control" value={this.state.temp.description} name="description" onChange={e => this.handleChange(e, e.target.name)}/>
+                    </div>
+                </div>
+
+                {/* Categorias */}
+                <div className="mb-3 row">
+                    <label htmlFor="categoryList" className="form-label col-sm-3 col-md-2 col-form-label">Categoria</label>
+                    <div className="col-auto">
+                        <select className="form-select" name="categoryId" id="categoryList" defaultValue={selectedCat ? this.props.categories.get[selectedCat].id : ""} onChange={e => this.handleChange(e, e.target.name)} >
+                            {categoryOptions}
+                        </select>
+                    </div>
+                </div>
                 
                 <ArticleEditor content={this.state.temp.content} readOnly={this.state.readOnly} onContentStateChange={this.handleContentChange}/> 
 
@@ -447,8 +484,7 @@ export default class Article extends Component {
                         </div>
                     </div>
                 </div>
-
-
+                
             </div>
         )
     }
@@ -456,27 +492,28 @@ export default class Article extends Component {
     // O componente tem 2 aparências: Se está no modo edição carrega inputs, radio, editor richtext, etc. 
     // Se for modo somente leitura carrega os dados do artigo formatados e estilizados com CSS.
     render() {
-        // Se é usuário não logado tentando criar artigo ou descartou na criação do artigo redireciona.
+        // Se é usuário não logado tentando criar artigo ou descartou na criação do artigo redireciona.        
         if(this.state.redir)
             return <Redirect to='/' />
 
         // loading
-        if(this.state.loading || this.state.validatingToken)
+        if(this.state.loading || this.state.validatingToken) {            
             return <div className="loading_div"><img src={loadingImg} className="loading_img"/></div>
+        }
         
         
         // Se encontrou o artigo renderiza ele todo no modo leitura a menos que readOnly=false daí renderiza no modo edição.
         // Ou se é criação de artigo, renderiza os campos do artigo no modo de edição.
         if(!this.state.error) {
-            if(this.state.readOnly) { // renderiza no modo somente leitura
+            if(this.state.readOnly) { // renderiza no modo somente leitura                
                 return this.readMode()
             }
-            else { // renderiza no modo de edição
+            else { // renderiza no modo de edição                
                 return this.editorMode()
             }            
         }
         
         // Se não encontrou o artigo
-        else return <div>{this.state.error}</div> 
+        else return <div className="text-center mt-5">{this.state.error}</div> 
     }
 }

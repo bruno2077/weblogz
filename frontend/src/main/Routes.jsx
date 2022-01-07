@@ -33,7 +33,7 @@ const Routes = props => {
     console.log("Routes executado")
 
     return(
-        <div className="container my-4 col-12 col-sm-11 col-md-10">
+        <div className="main-content container">
             <Switch>
                 <Route exact path='/'>
                     <MainContentWithOptions pagOptions={props.pagOptions} user={props.user} categories={props.categories}/>                    
@@ -62,7 +62,7 @@ const Routes = props => {
                 </Route>                     
 
                 <Route path="*">
-                    <MainContent user={props.user} categories={props.categories} pagOptions={props.pagOptions}/>
+                    <MainContent is404={true} user={props.user} categories={props.categories} pagOptions={props.pagOptions}/>
                 </Route>
             </Switch>
         </div>

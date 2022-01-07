@@ -28,25 +28,22 @@ export default class Aside extends Component {
             return <div className="loading_div"><img src={loadingImg} className="loading_img"/></div> 
 
         // Monta uma lista com links com os títulos dos últimos artigos.
-        let titlesList = []        
+        const titlesList = []        
         for(let i in this.state.articles) {            
             titlesList.push(<li key={i}><Link to={`/articles/${this.state.articles[i].id}`}>{this.state.articles[i].title}</Link></li>)
         }
         
+        // Monta uma lista com as categorias
         const categoriesList = []    
         this.props.categories.get.forEach( (el, idx) => {            
             categoriesList.push(<li key={idx}><Link to={`/categories/${el.id}`}>{el.name}</Link></li>)
-        }) 
+        })
 
         return (
-            <aside  className="col d-none d-md-block">
-                {/* Visível até certo breakpoint. quando sumir, fazer o componente Filtros expandir lá no main, isso é feito só lá obvio. 
-                    Mas é assim q é pra acontecer */}
-        
-                {/* <div>{`${props.categories.get}`}</div> */}
+            <aside  className="col d-none d-md-block pt-5 ms-3">
         
                 <div className='aside-item'>
-                    <h3>Últimas</h3>
+                    <p>Últimas</p>
                     <div>
                         {/* últimos artigos */}
                         <ul>
@@ -56,7 +53,7 @@ export default class Aside extends Component {
                 </div>
         
                 <div className='aside-item'>
-                    <h3>Categorias</h3>
+                    <p>Categorias</p>
                     <div>
                         <ul>
                             {categoriesList}

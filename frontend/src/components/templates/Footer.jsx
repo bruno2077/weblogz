@@ -6,7 +6,7 @@ import logo1 from '../../assets/img/logo_light_grey.png';
 
 const Footer = props => {
     return (
-        <footer>            
+        <footer className='align-self-bottom'>            
             <div className="aboveFooter m-4">
                 <span><a href="#" onClick={e => { e.preventDefault(); window.scrollTo(0,0); } }>Voltar ao topo</a></span>
             </div>

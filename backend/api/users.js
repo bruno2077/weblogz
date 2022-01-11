@@ -122,8 +122,16 @@ module.exports = app => {
         try {
             existsOrError(user, 'Usuário não existe!')
         } catch(msg) {
-            res.status(400).send(msg) 
+            return res.status(400).send(msg)
         }        
+
+        // Verifica se o usuário possui algum artigo, se tiver não pode deletar
+        try {
+            const author = await app.db('articles').where({userId: req.params.id}).first()
+            notExistsOrError(author, "Usuário não pode ser excluído pois possui artigo(s). Delete todos antes para excluí-lo.")
+        } catch(msg) {
+            return res.status(400).send(msg)
+        }
         
         // Fuso horário do servidor
         const serverTimeZone = -(new Date().getTimezoneOffset() / 60)
@@ -131,8 +139,7 @@ module.exports = app => {
 
         // No SQL é pra ter este formato: "2012-08-24 14:00:00 +02:00"
         const nowInSQLTimestampType = `${serverNow.getFullYear()}-${serverNow.getMonth()+1}-${serverNow.getDate()} ${serverNow.getHours()}:${serverNow.getMinutes()}:${serverNow.getSeconds()} ${serverTimeZone}`
-        // console.log(nowInSQLTimestampType)
-
+        
         try {
             await app.db('users').where({id: req.params.id}).update({ deletedAt: nowInSQLTimestampType })
             const testTimeSQL = await app.db('users').where({id: req.params.id}).select('deletedAt').first()

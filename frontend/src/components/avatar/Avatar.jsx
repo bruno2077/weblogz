@@ -15,11 +15,16 @@ export default function Avatar(props) {
     
     options.push(<li key="sair" className="dropdown-item p-0 m-0" type="button"><Link to='/login' className="dropdown-option py-1 px-3" onClick={e => props.userSet(false)} ><i className="fas fa-sign-out-alt pe-3"></i>Sair</Link></li>)
 
+    let adjustedUserName = props.userName
+    if(props.userName.length >= 20)
+        adjustedUserName = props.userName.substring(0, 19) + "..."
+
+
     return (
         <div className="dropdown" id="avatar-area">
 
             <a href="/#" className="btn dropdown-toggle d-flex align-items-center" type="button"  id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                <span className="username pe-3 overflow-hidden">{props.userName}</span>
+                <span className="username pe-3 overflow-hidden">{adjustedUserName}</span>
                 <img className='userimg' src={props.pic} alt="avatar"/>
             </a>
 

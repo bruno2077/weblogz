@@ -147,10 +147,9 @@ export default class AdmCategories extends Component {
         // Alteração da categoria
         if(this.state.category.id) {           
             axios.put(`${baseApiUrl}/categories/${this.state.category.id}`, this.state.category)
-                .then(res => {                    
-                    if(res.data) {                        
-                        toast.success(`${res.data}`, toastOptions) // Responde que alterou a categoria.
-                        this.props.categories.update()
+                .then(res => {      
+                    if(res.data) {
+                        this.props.categories.update(true, res.data) // Responde que alterou a categoria.
                     }
                     // Caso especial. Se a resposta for string vazia é pq tentou alterar a categoria para o mesmo nome. Isso não faz nada no backend.
                     else this.restart()
@@ -171,8 +170,7 @@ export default class AdmCategories extends Component {
         else {
             axios.post(`${baseApiUrl}/categories`, this.state.category)
                 .then(res => {
-                    this.props.categories.update()                    
-                    toast.success(res.data, toastOptions) // Responde que criou a categoria
+                    this.props.categories.update(true, res.data) // Responde que a categoria foi criada.
                 })                
                 .catch(e => {
                     if(e.response) { 
@@ -191,16 +189,14 @@ export default class AdmCategories extends Component {
     // Deleta a categoria SE não tiver artigo cadastrado nela.
     deleteCategory() {        
         axios.delete(`${baseApiUrl}/categories/${this.state.category.id}`, this.state.category)
-            .then(res => {
-                this.props.categories.update()
-                toast.warning(res.data, { ...toastOptions, autoClose: 3000 }) // Responde que deletou o artigo                
+            .then(res => {                
+                this.props.categories.update(true, res.data) // Responde que deletou o artigo
             })            
             .catch(e => {
-                this.restart()
-                // Dá erro se tiver artigo cadastrado nessa categoria.
-                if(e.response)
+                if(e.response) // Dá erro se tiver artigo cadastrado nessa categoria.
                     toast.error(e.response.data, { ...toastOptions, autoClose: 3000 })
                 else toast.error(e, { ...toastOptions, autoClose: 3000 })
+                this.restart()
             })
     }
 

@@ -237,7 +237,9 @@ export default class AdmUsers extends Component {
                 else this.restart(true)
             })
             .catch(e => {
-                toast.error(e, toastOptions)
+                if(e.response)
+                    toast.error(e.response.data, toastOptions) // Usuário possui artigos.
+                else toast.error(e, toastOptions)
                 this.restart(true)
             })
     }

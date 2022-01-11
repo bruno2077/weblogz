@@ -126,10 +126,14 @@ export default class App extends Component {
     
 
     // Pega a lista de categorias no backend        
-    async getCategories() {
+    async getCategories(fromChild, msg) {
         this.setState({loading: true})
         await axios.get(`${baseApiUrl}/categories`)
-            .then(res => this.setState({ categories: res.data }))            
+            .then(res => {
+                if(fromChild && msg) // Lança uma mensagem na tela quando adicionar, alterar ou excluir uma categoria.
+                    toast.success(msg, toastOptions)
+                this.setState({ categories: res.data })                
+            })            
             .catch(e => {
                 // Aqui trata algum erro de rede ou não previsto já que o GET de categoria é público.
                 toast.error(e, toastOptions)

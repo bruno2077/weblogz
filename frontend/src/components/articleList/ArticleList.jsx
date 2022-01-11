@@ -83,7 +83,7 @@ export default class ArticleList extends Component {
             // Primeiro printa os na esquerda
             for(let i = leftAmount; i > 0; i--) {   
                 if(i === leftAmount && (currentPage - i - 1) > 1)                    
-                    pages.push(<li key="farleft" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
+                    pages.push(<li key="farleft" className='page-item disabled'><a className='page-link' href="/#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
 
                 pages.push(<li key={currentPage - i} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${currentPage - i}`}>{currentPage - i}</Link></li>)
             }
@@ -97,7 +97,7 @@ export default class ArticleList extends Component {
             for(let i = 1; i <= rightAmount; i++) {
                 pages.push(<li key={currentPage + i} className='page-item'><Link className='page-link' to={`${window.location.pathname}?page=${currentPage + i}`}>{currentPage + i}</Link></li>)
                 if(i === rightAmount && (currentPage + i + 1) < totalPages)                    
-                    pages.push(<li key="farright" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
+                    pages.push(<li key="farright" className='page-item disabled'><a className='page-link' href="/#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
             }
             
             // Por fim renderiza a última página seja a atual ou não.
@@ -116,7 +116,7 @@ export default class ArticleList extends Component {
 
         
         return(
-            <nav className="" aria-label="Navegação da lista de artigos">
+            <nav className="" aria-label="Paginação da lista de artigos">
                 <ul className="pagination pagination-sm m-0">
                     {pages}
                 </ul>
@@ -161,7 +161,7 @@ export default class ArticleList extends Component {
         
         let articles = []
         let categoryTag = "" 
-        let dates = ""
+
         let createdAt, updatedAt
         if(this.props.categories.get) {
             this.state.content.data.forEach( (el, idx) => {
@@ -170,11 +170,12 @@ export default class ArticleList extends Component {
                 
                 createdAt = new Date(el.created_at)               
                 
+                const createdMsg = `Criado em: ${createdAt.toLocaleDateString()}`
+                let updatedMsg = ""
                 if(`${el.created_at}` !== `${el.updated_at}`) {
                     updatedAt = new Date(el.updated_at)
-                    dates = `Criado em: ${createdAt.toLocaleDateString()} atualizado em: ${updatedAt.toLocaleDateString()}`
+                    updatedMsg = `atualizado em: ${updatedAt.toLocaleDateString()}`
                 }
-                else dates = `Criado em: ${createdAt.toLocaleDateString()}`
 
                 articles.push(
                     <div key={idx} className='article-briefing'>
@@ -183,8 +184,11 @@ export default class ArticleList extends Component {
                         <div className='who-when'>
                             <img className='author-avatar' src={el.authoravatar} alt='avatar do autor'/>
                             <div>
-                                <span className='author'>{`Postado por: ${el.author}`}</span><br/>                            
-                                <span className='posted-dates'>{dates}</span>
+                                <span className='author'>{`Postado por: ${el.author}`}</span>
+                                <div className='d-flex flex-column flex-sm-row'>
+                                    <span className='posted-dates'>{createdMsg}</span>
+                                    <span className='posted-dates'>{updatedMsg}</span>
+                                </div>
                             </div>
                         </div>
                         <p className="article-description">{el.description}</p>
@@ -207,8 +211,11 @@ export default class ArticleList extends Component {
             )
         }
 
+        let xsCategory = "" // fazer como no avatar
+
         return (            
             <main className="col-12 col-md-8 col-xl-9 pt-5">
+                {xsCategory}
                 {title}
                 {articles}
                 {/* Paginação */}

@@ -40,9 +40,19 @@
 .theadClick {
     cursor: pointer;
 }
-.theadClick:hover {
-    background-color: #CFE2FF77;
-}
+
 .theadClick:active {
     color: #fff;
+}
+
+.admUsers { /*Limita o tamanho do form e da tabela caso a tela seja muito grande */
+    max-width: 1000px;
+}
+
+.th-id { /* Fixa o tamanho da coluna 'Código' na tabela */
+    width: 110px;
+}
+
+thead th {
+    white-space: nowrap;
 }

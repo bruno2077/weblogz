@@ -28,6 +28,7 @@ export default function Header(props) {
         )
     }
 
+
     return (
         <header className="col-12">
             <nav className="navbar navbar-dark bg-dark w-100 m-0 p-0 d-flex justify-content-sm-between justify-content-center">
@@ -39,6 +40,20 @@ export default function Header(props) {
                 <span className='protip'>Blog de todos. Terra de ninguém. Cadastre-se, publique-se, arque com as consequências, sucesso!</span>
                 {btnNewArticle}
             </div>
+            
+            {/* navbar categories */}
+            <div className="dropdown categories-dropdown d-flex d-md-none col-12 bg-dark align-itens-center justify-content-center"> 
+                <a className="btn categories-title dropdown-toggle d-flex align-items-center" type="button"  id="dropdownMenuButton2" data-bs-toggle="dropdown" href="/#" aria-expanded="false">
+                    <span className='title'>Categorias</span>
+                </a>
+                <ul className="dropdown-menu dropdown-menu-sm-end dropdown-menu-start"  aria-labelledby="navbarDropdown">
+                    <li className="dropdown-item p-0 m-0"><Link to="/" className="dropdown-option py-1 ps-3" >Todas</Link></li>
+                    {props.categories.get.map(el => {
+                        return <li key={el.id} className="dropdown-item p-0 m-0"><Link to={`/categories/${el.id}`} className="dropdown-option py-1 ps-3" >{el.name}</Link></li>
+                    })}
+                </ul>
+            </div>
+            
         </header>
     )    
 }

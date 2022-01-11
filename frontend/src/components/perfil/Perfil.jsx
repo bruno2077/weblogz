@@ -16,8 +16,7 @@ import Article from '../article/Article'
 
 
 // Ordena a tabela pela coluna onclick. Essa função só é usada quando há apenas 1 página pra evitar acesso desnecessário ao backend.
-function sortTableLocal(tableColumn, dataType, asc=true) {
-    console.log("ordenando table... com col, tipo, ascdesc: ", tableColumn, dataType, asc)
+function sortTableLocal(tableColumn, dataType, asc=true) {    
     let table, rows, switching, i, x, y, xdate, ydate, shouldSwitch;
     table = document.getElementById("articleTable");
     
@@ -57,8 +56,6 @@ function sortTableLocal(tableColumn, dataType, asc=true) {
                     xdate = "30000000" // Se nunca foi publicado
                 if(!parseInt(ydate))
                     ydate = "30000000" // Se nunca foi publicado
-                console.log(xdate, " ", ydate)
-                
 
                     if(asc) {
                         if (parseInt(xdate) > parseInt(ydate)) {                    
@@ -134,21 +131,22 @@ export default class Perfil extends Component {
         console.log("Perfil montado")
         
         // Valida o token do usuário e se tiver OK pega a tabela de artigos deste usuário no backend.
-        const load = new Promise(resolve => {            
-            resolve(this.validateUser())
-        })        
-        load.then(_ => this.getUserArticles())
-        .catch(e => {
-            if(e.response) {
-                toast.error(e.response.data, toastOptions)
-            }
-            else console.log(e)
-        })
+        if(this.props.user.get) {
+            const load = new Promise(resolve => {            
+                resolve(this.validateUser())
+            })        
+            load.then(_ => this.getUserArticles())
+            .catch(e => {
+                if(e.response) {
+                    toast.error(e.response.data, toastOptions)
+                }
+                else console.log(e)
+            })
+        }
     }
     
     componentDidUpdate(prevProps) {        
-        if(this.props.pagOptions.get !== prevProps.pagOptions.get) {
-            console.log("updatano: ", this.props.pagOptions.get)
+        if(this.props.pagOptions.get !== prevProps.pagOptions.get) {            
             this.setState({loading: true})
             this.getUserArticles()            
         }        
@@ -175,7 +173,7 @@ export default class Perfil extends Component {
                     toast.error(e.response.data, toastOptions)
                 else console.log(e)
             })            
-        }
+        }        
     }
 
     // Essa função pega os artigos do usuário logado no backend. Usa até 4 query strings: asc, col, lim e page.
@@ -191,8 +189,7 @@ export default class Perfil extends Component {
                     page: 1                    
                 })
             }
-            else { // Se encontrou um ou mais artigos
-                console.log(res.data)
+            else { // Se encontrou um ou mais artigos                
                 this.setState({
                     articles: res.data.data,
                     count: res.data.count,
@@ -226,8 +223,7 @@ export default class Perfil extends Component {
     
 
     // Essa função é usada dentro do editor de artigo pra fechar o artigo e voltar para o perfil.
-    async closeArticle() {
-        console.log("fechando arquivo")
+    async closeArticle() {        
         await this.setState({loading: true, editingArticle: false} )
         this.getUserArticles() // Atualiza a lista de artigos
     }
@@ -267,8 +263,8 @@ export default class Perfil extends Component {
         // Cria um array com os [value=] das colunas do <thead>. 
         const labels = ["Título", 
                         "Categoria", 
-                        "Postado em", 
-                        "Atualizado em",
+                        "Postado", 
+                        "Atualizado",
                         "Publicado",
                         'Código']
 
@@ -276,17 +272,17 @@ export default class Perfil extends Component {
         const articleTheadField = []
         for(let i in articleTheadData) {              
             if( i === "2" || i === "3") { // colunas de datas created_at e updated_at
-                articleTheadField.push(<th key={`${i}`} className="theadClick" onClick={e => this.sortTable(e, i, 2)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>)
+                articleTheadField.push(<th key={`${i}`} className="theadClick" onClick={e => this.sortTable(e, i, 2)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-2"></i></th>)
             }
             else if(i < (labels.length-1) ) 
-                articleTheadField.push(<th key={`${i}`} className="theadClick" onClick={e => this.sortTable(e, i, 0)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>)
+                articleTheadField.push(<th key={`${i}`} className="theadClick" onClick={e => this.sortTable(e, i, 0)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-2"></i></th>)
 
             // Coluna ID. Essa coluna não é mostrada, é usada só pra carregar o artigo onClick na tabela.
-            else articleTheadField.push(<th key={`${i}`} className="theadClick d-none" onClick={e => this.sortTable(e, i, 1)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>)
+            else articleTheadField.push(<th key={`${i}`} className="theadClick d-none" onClick={e => this.sortTable(e, i, 1)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-2"></i></th>)
         }
         
         // A linha de cabeçalhos pronta.
-        let articleThead = <thead className="table-primary"><tr>{articleTheadField}</tr></thead>
+        let articleThead = <thead className=""><tr>{articleTheadField}</tr></thead>
 
 
         // Cria um array de arrays com os values dos objetos. Cada item é uma linha, um artigo.
@@ -538,8 +534,7 @@ export default class Perfil extends Component {
 
     // Carrega o artigo onClick na tabela usando seu id. Mostra só o artigo e esconde todo resto.
     loadArticle(ev) {        
-        let id = parseInt(ev.currentTarget.children[5].innerHTML) || 0
-        console.log(id)
+        let id = parseInt(ev.currentTarget.children[5].innerHTML) || 0        
         this.setState({articleId: id})
         this.setState({editingArticle: true})
     }
@@ -557,8 +552,8 @@ export default class Perfil extends Component {
 
         const paginas = [] // primeira coisa é adicionar a primeira página. SE for a currentPage mete um selected.
         if(currentPage === 1 )
-            paginas.push(<li key="1" className='page-item active' aria-current="page"><a className='page-link' href="#" onClick={e => this.handlePageChange(e)}>1</a></li>)
-        else paginas.push(<li key="1" className='page-item'><a className='page-link' href="#" onClick={e => this.handlePageChange(e)}>1</a></li>)
+            paginas.push(<li key="1" className='page-item active' aria-current="page"><a className='page-link' href="/#" onClick={e => this.handlePageChange(e)}>1</a></li>)
+        else paginas.push(<li key="1" className='page-item'><a className='page-link' href="/#" onClick={e => this.handlePageChange(e)}>1</a></li>)
 
 
         if(totalPages > 2) {
@@ -602,41 +597,41 @@ export default class Perfil extends Component {
             // Primeiro printa os na esquerda
             for(let i = leftAmount; i > 0; i--) {   
                 if(i === leftAmount && (currentPage - i - 1) > 1)                    
-                    paginas.push(<li key="farleft" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
+                    paginas.push(<li key="farleft" className='page-item disabled'><a className='page-link' href="/#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
 
-                paginas.push(<li key={currentPage - i} className='page-item'><a className='page-link' href="#" onClick={e => this.handlePageChange(e)}>{currentPage - i}</a></li>)
+                paginas.push(<li key={currentPage - i} className='page-item'><a className='page-link' href="/#" onClick={e => this.handlePageChange(e)}>{currentPage - i}</a></li>)
             }
 
             //Agora renderiza a pagina atual se esta não for nem a 1ª e nem a última.
             if(currentPage !== 1 && currentPage !== totalPages ) {                
-                paginas.push(<li key={currentPage} className='page-item active'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{currentPage}</a></li>)
+                paginas.push(<li key={currentPage} className='page-item active'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{currentPage}</a></li>)
             }
 
             // Em seguida renderiza os na direita
             for(let i = 1; i <= rightAmount; i++) {
-                paginas.push(<li key={currentPage + i} className='page-item'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{currentPage + i}</a></li>)
+                paginas.push(<li key={currentPage + i} className='page-item'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{currentPage + i}</a></li>)
                 if(i === rightAmount && (currentPage + i + 1) < totalPages)                    
-                    paginas.push(<li key="farright" className='page-item disabled'><a className='page-link' href="#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
+                    paginas.push(<li key="farright" className='page-item disabled'><a className='page-link' href="/#" tabindex="-1" aria-disabled="true">{"..."}</a></li>)
             }
             
             // Por fim renderiza a última página seja a atual ou não.
             if(totalPages === currentPage)                
-                paginas.push(<li key={totalPages} className='page-item active'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{totalPages}</a></li>)
+                paginas.push(<li key={totalPages} className='page-item active'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{totalPages}</a></li>)
             else {
-                paginas.push(<li key={totalPages} className='page-item'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{totalPages}</a></li>)
+                paginas.push(<li key={totalPages} className='page-item'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{totalPages}</a></li>)
             }
         }
         else if(totalPages === 2) 
             if(totalPages === currentPage)                
-                paginas.push(<li key={2} className='page-item active'><a className='page-link' href='#' onClick={e => this.handlePageChange(e) }>{2}</a></li>)
+                paginas.push(<li key={2} className='page-item active'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e) }>{2}</a></li>)
             else {
-                paginas.push(<li key={2} className='page-item'><a className='page-link' href='#' onClick={e => this.handlePageChange(e)}>{2}</a></li>)
+                paginas.push(<li key={2} className='page-item'><a className='page-link' href='/#' onClick={e => this.handlePageChange(e)}>{2}</a></li>)
             }
 
         
         return(
-            <nav className="d-flex align-self-center" aria-label="Navegação da lista de artigos">
-                <ul className="pagination">
+            <nav className="" aria-label="Paginação da lista de artigos">
+                <ul className="pagination pagination-sm m-0">
                     {paginas}
                 </ul>
             </nav>
@@ -646,12 +641,12 @@ export default class Perfil extends Component {
 
     render() {
         // Se não tem usuário logado e não está relogando o usuário: Redireciona pra tela de login.
-        if ((!this.props.user.get && !this.state.reLogging))
+        if (!this.props.user.get && !this.state.reLogging)
             return <Redirect to='/login' />
 
-        // Se está validando o token no backend
+        // Se está validando o token no backend        
         if (this.state.validatingToken || this.state.loading)
-            return <div className="loadiv"><img src={loadingImg} className="loading"/></div>
+            return <div className="loading_div"><img src={loadingImg} className="loading_img" alt='Carregando'/></div>
 
         // Se um artigo está aberto pra edição exibe somente ele.
         if(this.state.editingArticle) {
@@ -669,18 +664,25 @@ export default class Perfil extends Component {
             table = (
                 <div>
                     <div className="table-responsive">                        
-                            {articleTable}
+                        {articleTable}
                     </div>
-                    <div>
-                        {this.navPaginator(totalPages, this.state.page)}
-                        
-                        <label htmlFor="perpage">Por página: 
-                            <select name="tLimit" id="perpage" value={`${this.state.limit}`} onChange={e => this.handleLimitChange(e)}>
+
+                    {/* Paginação */}
+                    <div className='d-flex flex-column pagination mt-2 mb-3'>
+                        <div className='d-flex align-items-center mb-3'>                        
+                            <span className='me-2'>Página</span>
+                            {this.navPaginator(totalPages, this.state.page)}
+                        </div>
+
+                        <div className='d-flex align-items-center'>
+                            <span className='me-2'>Por página</span>
+                            <select className="form-select form-select-sm me-4" name="tLimit" id="perpage" value={`${this.state.limit}`} onChange={e => this.handleLimitChange(e)}>
                                 <option  value="3">3</option>
                                 <option  value="5">5</option>
                                 <option  value="10">10</option>
-                            </select>
-                        </label>
+                                <option  value="20">20</option>
+                            </select>                            
+                        </div>                        
                     </div>
                 </div>
             )
@@ -688,14 +690,13 @@ export default class Perfil extends Component {
         
 
         return (
-            <div className="col-12 col-sm-9 col-md-8 col-lg-6 col-xl-6 perfil">
+            <div className="perfil mt-5">
                 <h2>Dados do usuário</h2>
                 <p>Preencha todos os campos abaixo para alterar seus dados.</p>
 
-                <div className="border rounded p-4 " >
-
+                <div className="border rounded p-1 p-sm-4 userdata" >
                     {/* Avatar do usuario */}
-                    <div className="mb-3 row d-sm-flex align-items-center" >
+                    <div className="mb-3 row d-sm-flex align-items-center " >
                         <div className="">
                             <img className="avatarImg" src={this.state.user.avatar} alt="avatar" data-bs-toggle="modal" data-bs-target="#avatarModal"/>
                         </div>
@@ -762,10 +763,10 @@ export default class Perfil extends Component {
                     </div>
                 </div>
                 
-                <h2>Seus artigos</h2>
+                <h2 className='mt-4'>Seus artigos</h2>
                 <p>Todos os artigos de sua autoria, publicados ou não, estão aqui.</p>
-                <div className="border rounded p-4 " >
-                    {/* Se escreveu artigo mostra a tabela senão mostra uma mensagem. */}
+                <div className="border rounded p-1 p-sm-4 " >
+                    {/* Se escreveu ao menos 1 artigo mostra a tabela senão mostra uma mensagem. */}
                     {table}
                 </div>
 

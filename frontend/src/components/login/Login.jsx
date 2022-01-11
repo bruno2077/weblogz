@@ -36,7 +36,7 @@ export default class Login extends Component {
     }    
     
     componentDidMount() {  
-        // console.log("logReg montado")
+        console.log("logReg montado")
     }    
 
     // Pega os dados digitados nos input e põe no objeto user.
@@ -236,45 +236,46 @@ export default class Login extends Component {
         if(isRegister)        
             fields.push(<input key="4" name="confirmPassword" className="form-control mb-3" value={this.state.user.confirmPassword} type="password" onChange={e => this.handleChange(e, e.target.name)} placeholder="Confirme a senha"/>)
         fields.push(<button key="5" className="btn btn-success me-3 " onClick={e => this.sendUser()}>Enviar</button>)        
-        if(isRegister) {            
-            fields.push(<span key="6">Já é registrado? clique <a href="#" onClick={ e => {e.preventDefault(); this.props.login.setReg(false)}} >aqui</a></span>)
-        }
-        else fields.push(<span key="7">Não é registrado? clique <a href="#"  onClick={ e => {e.preventDefault(); this.props.login.setReg(true)}} >aqui</a></span>)
-
+        
+        
+        const signInUpMsg = isRegister ? "Já é registrado? clique " : "Não é registrado? clique "            
 
         return (
-            <div className="login-form col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
-                <h2>{pageTitle}</h2>
-                <div className="border rounded p-4">        
+            <div className="login mt-5">
+                <div className=''>
+                    <h2>{pageTitle}</h2>
+                    <div className="border rounded p-2 p-sm-4 login-form">        
 
-                    {/* Modal do avatar */}
-                    <div className="modal fade" id="avatarModal" data-bs-backdrop="static" tabIndex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
-                        <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="avatarModalLabel">Foto do perfil de usuário</h5>
-                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" 
-                                        onClick={e => {
-                                            if(this.state.imageLoaded) {
-                                                this.setState({imageLoaded: null, tempImg: null})
-                                            }
-                                        }}>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    {/* React Avatar Editor. */}
-                                    {this.showAvatarEditor()}
-                                </div>
-                                <div className="modal-footer">
-                                    {/* BTNs  */}
-                                    {this.showModalFooter()}
+                        {/* Modal do avatar */}
+                        <div className="modal fade" id="avatarModal" data-bs-backdrop="static" tabIndex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+                            <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="avatarModalLabel">Foto do perfil de usuário</h5>
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" 
+                                            onClick={e => {
+                                                if(this.state.imageLoaded) {
+                                                    this.setState({imageLoaded: null, tempImg: null})
+                                                }
+                                            }}>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        {/* React Avatar Editor. */}
+                                        {this.showAvatarEditor()}
+                                    </div>
+                                    <div className="modal-footer">
+                                        {/* BTNs  */}
+                                        {this.showModalFooter()}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    {fields}                    
-                    
+                        {fields}
+                        
+                        <p className='signMsg text-center mt-3 mb-0'>{signInUpMsg}<a href="/#" onClick={ e => {e.preventDefault(); this.props.login.setReg(!isRegister)}} >aqui</a></p>
+                    </div>
                 </div>
             </div>
         )

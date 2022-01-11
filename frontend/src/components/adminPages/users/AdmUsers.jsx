@@ -330,10 +330,10 @@ export default class AdmUsers extends Component {
             if(i !== "0") {
                 if (i < (labels.length-1) )
                     userTheadField.push(<th key={`${i}`} className="theadClick" onClick={e => sortTable(i)} name={userTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>)                
-                else userTheadField.push(<th className="d-none d-md-table-cell theadClick" onClick={e => sortTable(i,1)} key={`${i}`} name={userTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>) // coluna id
+                else userTheadField.push(<th className="d-none d-md-table-cell th-id theadClick" onClick={e => sortTable(i,1)} key={`${i}`} name={userTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>) // coluna id
             }
         }
-        let userThead = <thead className="table-primary"><tr>{userTheadField}</tr></thead>
+        let userThead = <thead className=""><tr>{userTheadField}</tr></thead>
 
 
         // Cria um array de arrays com os values dos objetos. Cada item é uma linha, um user.        
@@ -381,10 +381,9 @@ export default class AdmUsers extends Component {
             userRows.push(<tr className="userRow" key={`${i}`} onClick={e => this.loadUser(e)}>{userField}</tr>)
             userField = []
         }
-        const userTbody = <tbody className="table-light">{userRows}</tbody>
-        const userTheadTbody = 
-            <table id="theUserTable"className="table table-hover caption-top mt-4">
-                <caption className="tTitle text-center" >Tabela de usuários</caption>    
+        const userTbody = <tbody className="">{userRows}</tbody>
+        const userTheadTbody =             
+            <table id="theUserTable"className="table table-striped mt-2">                
                 {userThead} 
                 {userTbody}
             </table>
@@ -504,9 +503,10 @@ export default class AdmUsers extends Component {
 
         // Se está validando o token no backend ou se está pegando a lista de usuários no backend.
         if(this.state.loading)
-            return <div className="loadiv"><img src={loadingImg} className="loading"/></div>
+            return <div className="loading_div"><img src={loadingImg} className="loading_img" alt='Carregando'/></div>
 
-        let btnNewUser, showId, showForm, btnDel, showDelConfirmation = null
+        let btnNewUser, showId, showForm, btnDel
+        btnNewUser = showId = showForm = btnDel = ""        
         
         let formTitle = this.state.isNewUser ? "Novo usuário" : "Editar usuário"
 
@@ -579,20 +579,20 @@ export default class AdmUsers extends Component {
 
                     {/* Email e nome */}
                     <div className="row gy-2 gx-2 my-2">
-                        <div className="col-md-5 col-sm-6">
+                        <div className="col-12 col-sm-6">
                             <input className="form-control" type="email" name="email" onChange={e => this.handleChange(e, e.target.name)} value={this.state.user.email}  placeholder="E-mail" id="inputEmail" aria-describedby="inputEmail"/>
                         </div>
-                        <div className="col-md-5 col-sm-6">
+                        <div className="col-12 col-sm-6">
                             <input className="form-control" type="text" name="name"  onChange={e => this.handleChange(e, e.target.name)} value={this.state.user.name}  placeholder="Nome" id="inputName" aria-describedby="inputName"/>
                         </div>
                     </div>             
                     
                     {/* Senha e confirmação de senha */}
                     <div className="row gy-2 gx-2 my-2">
-                        <div className="col-md-5 col-sm-6">
+                        <div className="col-12 col-sm-6">
                             <input className="form-control" name="password" onChange={e => this.handleChange(e, e.target.name)} type="password" placeholder="Senha" id="inputPassword" aria-describedby="inputPassword" />
                         </div>
-                        <div className="col-md-5 col-sm-6">
+                        <div className="col-12 col-sm-6">
                             <input className="form-control" name="confirmPassword" onChange={e => this.handleChange(e, e.target.name)} type="password" placeholder="Confirme a senha" id="inputConfirmPassword" aria-describedby="inputConfirmPassword"/>
                         </div>
                     </div>                      
@@ -628,6 +628,7 @@ export default class AdmUsers extends Component {
 
                 {showForm}
 
+                <p className="tTitle text-center mt-3 mb-0" >Tabela de usuários</p>    
                 <div className="table-responsive">
                     {this.state.userTable}
                 </div>

@@ -25,7 +25,7 @@ export default class Aside extends Component {
       
    render() {
         if(this.state.loading)
-            return <div className="loading_div"><img src={loadingImg} className="loading_img"/></div> 
+            return <div className="loading_div"><img src={loadingImg} className="loading_img" alt="Carregando"/></div>
 
         // Monta uma lista com links com os títulos dos últimos artigos.
         const titlesList = []        

@@ -6,6 +6,7 @@ import { toast } from "react-toastify"
 import { baseApiUrl, toastOptions } from "../../../global"
 import loadingImg from '../../../assets/img/loading.gif'
 import Article from "../../article/Article"
+import './admArticles.css'
 
 
 export default class Articles extends Component {
@@ -127,8 +128,8 @@ export default class Articles extends Component {
         const labels = ["Título", 
                         "Categoria", 
                         "Autor", 
-                        "Postado em", 
-                        "Atualizado em",
+                        "Postado", 
+                        "Atualizado",
                         "Publicado",
                         'Código']
 
@@ -136,14 +137,14 @@ export default class Articles extends Component {
         const articleTheadField = []
         for(let i in articleTheadData) {                          
             if(i < (labels.length-1) ) 
-                articleTheadField.push(<th key={`${i}`} className="theadClick" onClick={e => this.sortTable(e)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>)
+                articleTheadField.push(<th key={`${i}`} className="theadClick" onClick={e => this.sortTable(e)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-2"></i></th>)
 
             // Coluna ID. Essa coluna não é mostrada, é usada só pra carregar o artigo onClick na tabela.
-            else articleTheadField.push(<th key={`${i}`} className="theadClick d-none" onClick={e => this.sortTable(e)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-3"></i></th>)
+            else articleTheadField.push(<th key={`${i}`} className="theadClick d-none" onClick={e => this.sortTable(e)} name={articleTheadData[i]}>{labels[i]}<i className="fas fa-sort ms-2"></i></th>)
         }
         
         // A linha de cabeçalhos pronta.
-        let articleThead = <thead className="table-primary"><tr>{articleTheadField}</tr></thead>
+        let articleThead = <thead className=""><tr>{articleTheadField}</tr></thead>
 
 
         // Cria um array de arrays com os values dos objetos. Cada item é uma linha, um artigo.
@@ -192,10 +193,9 @@ export default class Articles extends Component {
             articleRows.push(<tr className="articleRow" key={`${i}`} onClick={e => this.loadArticle(e)}>{articleField}</tr>)
             articleField = []
         }
-        const articleTbody = <tbody className="table-light">{articleRows}</tbody>
+        const articleTbody = <tbody className="">{articleRows}</tbody>
         const articleTheadTbody = 
-            <table id="articleTable"className="table table-hover caption-top mt-4">    
-                <caption className="tTitle text-center">Todos os artigos</caption>            
+            <table id="articleTable"className="table table-striped mt-2">
                 {articleThead} 
                 {articleTbody}
             </table>
@@ -301,8 +301,8 @@ export default class Articles extends Component {
 
         
         return(
-            <nav className="d-flex align-self-center" aria-label="Navegação da lista de artigos">
-                <ul className="pagination">
+            <nav className="" aria-label="Paginação da lista de artigos">
+                <ul className="pagination pagination-sm m-0">
                     {paginas}
                 </ul>
             </nav>
@@ -329,7 +329,7 @@ export default class Articles extends Component {
 
     render() {
         if(this.state.loading)
-            return <div className="loadiv"><img src={loadingImg} className="loading"/></div>
+            return <div className="loading_div"><img src={loadingImg} className="loading_img" alt="Carregando"/></div>
 
         // Se um artigo está aberto pra edição exibe somente ele.
         if(this.state.editingArticle) {
@@ -345,25 +345,32 @@ export default class Articles extends Component {
         // verifica se tem artigo. Se não tiver mostra a mensagem acima ao invés da tabela.
         if(this.state.articles.length > 0) {
             table = (
-                <div>
+                <div>                    
+                    <p className="tTitle text-center mt-4 mb-0">Todos os artigos</p>
                     <div className="table-responsive">                        
-                            {articleTable}
+                        {articleTable}
                     </div>
-                    <div>
-                        {this.navPaginator(totalPages, this.state.page)}
-                        
-                        <label htmlFor="perpage">Por página: 
-                            <select name="tLimit" id="perpage" value={`${this.state.limit}`} onChange={e => this.handleLimitChange(e)}>
+
+                    {/* Paginação */}
+                    <div className='d-flex flex-column pagination mt-2 mb-3'>
+                        <div className='d-flex align-items-center mb-3'>
+                            <span className='me-2'>Página</span>
+                            {this.navPaginator(totalPages, this.state.page)}
+                        </div>
+                        <div className='d-flex align-items-center'>
+                            <span className='me-2'>Por página</span>
+                            <select className="form-select form-select-sm me-4" name="tLimit" id="perpage" value={`${this.state.limit}`} onChange={e => this.handleLimitChange(e)}>
                                 <option  value="3">3</option>
                                 <option  value="5">5</option>
                                 <option  value="10">10</option>
+                                <option  value="20">20</option>
                             </select>
-                        </label>
+                        </div>
                     </div>
                 </div>
             )
         }        
 
-        return <div>{table}</div>
+        return <div className="admArticles">{table}</div>
     }
 }

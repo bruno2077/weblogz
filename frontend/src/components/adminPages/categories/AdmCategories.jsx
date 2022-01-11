@@ -2,7 +2,7 @@
 
 
 import React, { Component } from "react"
-//import './AdmCategories.css'
+import './AdmCategories.css'
 import axios from 'axios'
 import {baseApiUrl, toastOptions } from '../../../global'
 import { toast } from 'react-toastify';
@@ -107,18 +107,16 @@ export default class AdmCategories extends Component {
         
         for (let i in this.props.categories.get)
             categoryTbodyItens.push(<tr key={i} className="categoryRow" onClick={e => this.loadCategory(e)}>
-                <td className="d-none">{`${this.props.categories.get[i].id}`}</td>
-                <td>{`${this.props.categories.get[i].name}`}</td></tr>)
+                <td>{`${this.props.categories.get[i].name}`}</td>
+                <td>{`${this.props.categories.get[i].id}`}</td></tr>)
         
-        
-        const categoryTbody = <tbody className="table-light">{categoryTbodyItens}</tbody>
+        const categoryTbody = <tbody className="">{categoryTbodyItens}</tbody>
 
         return(
-            <table id="theCategoryTable"className="table table-hover caption-top mt-4" >
-                <caption className="tTitle text-center">Categorias cadastradas</caption>
-                <thead className="table-primary"><tr>
-                    <th name="id" className="theadClick d-none" onClick={e => sortTable(0, true)}>Código<i className="fas fa-sort ms-3"></i></th>
-                    <th name="name" className="theadClick" onClick={e => sortTable(1, false)}>Nome<i className="fas fa-sort ms-3"></i></th>
+            <table id="theCategoryTable" className="table table-striped mt-2" >                
+                <thead className=""><tr>
+                    <th name="name" className="theadClick" onClick={e => sortTable(0, false)}>Nome<i className="fas fa-sort ms-3"></i></th>
+                    <th name="id" className="theadClick th-id" onClick={e => sortTable(1, true)}>Código<i className="fas fa-sort ms-3"></i></th>
                 </tr></thead>
                 {categoryTbody}
             </table>
@@ -134,8 +132,8 @@ export default class AdmCategories extends Component {
         }        
         this.setState({
             category: {
-                name: categoryData[1],
-                id: categoryData[0]
+                name: categoryData[0],
+                id: categoryData[1]
             },
             isCategoryLoaded: true            
         })        
@@ -151,8 +149,8 @@ export default class AdmCategories extends Component {
             axios.put(`${baseApiUrl}/categories/${this.state.category.id}`, this.state.category)
                 .then(res => {                    
                     if(res.data) {                        
-                        this.props.categories.update()
                         toast.success(`${res.data}`, toastOptions) // Responde que alterou a categoria.
+                        this.props.categories.update()
                     }
                     // Caso especial. Se a resposta for string vazia é pq tentou alterar a categoria para o mesmo nome. Isso não faz nada no backend.
                     else this.restart()
@@ -214,29 +212,31 @@ export default class AdmCategories extends Component {
         if(this.state.isCategoryLoaded) {
             catTitle = "Alterar categoria"        
             catLoadedBtns.push(
-                <button key="1" type="button" className="btn btn-danger mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#delCategoryModal" >Deletar</button>,
-                <button key="2" type="button" className="btn btn-dark mt-2 ms-2" onClick={e => { this.restart(); selectedRowToggler(false); }}>Descartar</button>)            
+                <button key="1" type="button" className="btn btn-dark mt-2 ms-2" onClick={e => { this.restart(); selectedRowToggler(false); }}>Descartar</button>,
+                <button key="2" type="button" className="btn btn-danger mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#delCategoryModal" >Deletar</button>)
         }
         else catTitle = "Nova categoria"
 
         
         return (
-            <div>                
+            <div className="admCategories">                
                 {/* Título */}
                 <h4>{catTitle}</h4>
 
+                {/* Formulário */}
                 <div className="row my-2">                    
-                    <div className="col-md-8 col-sm-12">
-                        <input className="form-control" type="text" name="name"  onChange={e => this.handleChange(e, e.target.name)} value={this.state.category.name}  placeholder="Nome de categoria" id="inputCatName" aria-describedby="inputName"/>
+                    <div className="col-12 col-md-8">
+                        <input className="form-control" type="text" name="name" onChange={e => this.handleChange(e, e.target.name)} value={this.state.category.name}  placeholder="Nome de categoria" id="inputCatName" aria-describedby="inputName"/>
                     </div>
-                </div>  
-                
+                </div>                
                 <div> 
-                    <button type="button" className="btn btn-primary mt-2" onClick={e => this.sendCategory()} >Salvar</button>
+                    <button type="button" className="btn btn-primary mt-2" onClick={e => this.sendCategory()}>Salvar</button>
                     {catLoadedBtns}
                 </div>
-
-                <div className=" table-responsive col-md-8 col-sm-12">
+                
+                {/* Tabela */}
+                <p className="tTitle text-center mb-0 mt-4">Categorias de artigos</p>
+                <div className="table-responsive-sm">
                     {this.categoriesToTable()}
                 </div>
 

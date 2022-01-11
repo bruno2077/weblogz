@@ -10,7 +10,7 @@ import { baseApiUrl, toastOptions } from "../../global"
 import { toast } from "react-toastify"
 import React, { Component } from 'react';
 import loadingImg from '../../assets/img/loading.gif'
-import { Link, Redirect } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 
 
 export default class MainContent extends Component {
@@ -110,14 +110,11 @@ export default class MainContent extends Component {
         }
 
         if(this.state.loading) {
-            return <div className="loading_div"><img src={loadingImg} className="loading_img"/></div>
+            return <div className="loading_div"><img src={loadingImg} className="loading_img" alt='Carregando'/></div>
         }
         
         return (                
-                <div>
-                    <div className="row d-flex d-md-none text-center text-warning bg-dark"> {/* navbar categories */}
-                        <span>categorias...</span>
-                    </div>
+                <div>                    
                     <div className="row">                    
                         <ArticleList content={this.state.content} user={this.props.user} categories={this.props.categories} pagOptions={this.props.pagOptions}/>
                         <Aside categories={this.props.categories} />

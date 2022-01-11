@@ -38,4 +38,6 @@ export async function isValidToken(userData) {
     return 0
 }
 
-export default { baseApiUrl, userKey, avatarKey, isValidToken, toastOptions }
+const global = { baseApiUrl, userKey, avatarKey, isValidToken, toastOptions }
+
+export default global

@@ -20,7 +20,6 @@
     max-width: 150px;
 }
 
-
 .userimg {
     border: 1px #0001 solid;
     border-radius: 5px;
@@ -28,17 +27,17 @@
     width: 40px;
 }
 
-.user-option { /* itens do menu dropdown */   
+.dropdown-option { /* itens do menu dropdown */   
     display: inline-block;
     width: 100%; 
     height: 100%;
     text-decoration: none;
     color: #202020;
 }
-.user-option:hover {
+.dropdown-option:hover {
     color: #202020;
 }
-.user-option:active {
+.dropdown-option:active {
     background-color: royalblue;
     color: #fff;
 }

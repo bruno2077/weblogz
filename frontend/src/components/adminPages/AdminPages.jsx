@@ -1,6 +1,5 @@
 // Página administrativa contendo link para 3 outras páginas para administração de usuários, artigos e categorias.
 
-import './AdminPages.css'
 import AdmUsers from "./users/AdmUsers";
 import { Link, Redirect} from 'react-router-dom';
 import Articles from './articles/AdmArticles';
@@ -41,9 +40,9 @@ function tabToggler(ev, page) {
 
 
 export default function AdminPages(props) {         
-    useEffect(() => {        
+    useEffect(() => {
         tabToggler( null, props.page) // bota estilo na tab correspondente a página atual
-    }, [])
+    }, [props])
 
 
     // controle de acesso. Se não tem user ou se user não é admin redireciona.
@@ -71,10 +70,11 @@ export default function AdminPages(props) {
     }
     
     return (
-        <div className="col-12 col-sm-10" >
+        <div className="mt-5">
             <h2>Administração</h2>
+            <p>Selecione um item na tabela para editá-lo.</p>
             <div className="mb-4">
-                <ul className="nav nav-tabs">
+                <ul className="nav nav-tabs justify-content-center justify-content-sm-start">
                     <li className="nav-item"><Link onClick={e => tabToggler(e)} className="admtab nav-link" aria-selected="false" to={`/admin/users`}>Usuários</Link></li>
                     <li className="nav-item"><Link onClick={e => tabToggler(e)} className="admtab nav-link" aria-selected="false" to={`/admin/articles`}>Artigos</Link></li>
                     <li className="nav-item"><Link onClick={e => tabToggler(e)} className="admtab nav-link" aria-selected="false" to={`/admin/categories`}>Categorias</Link></li>                    

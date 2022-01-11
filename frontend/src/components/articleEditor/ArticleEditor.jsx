@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { convertFromRaw, EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import './ArticleEditor.css'
 
 
 export default class ArticleEditor extends Component {
@@ -42,25 +43,24 @@ export default class ArticleEditor extends Component {
 
     render() {        
         const { editorState } = this.state;        
-        let editorStyles = "demo-editor"
+        let textAreaStyles = "demo-editor mt-0"
+        let editorStyles = "demo-wrapper" 
         if(!this.props.readOnly) {
-            editorStyles += " bg-white"
+            textAreaStyles += " border border-top-0 p-2"
+            editorStyles += " mb-3 article-editor"
+
         }                
         return (            
-            <div className="col-md-10 col-12">
-                <div className="editor-container mb-3">
-                    <Editor      
-                        toolbarHidden={this.props.readOnly}
-                        editorState={editorState}    
-                        wrapperClassName="demo-wrapper" // classe aplicada em volta de todo o componente, ou seja, do editor e da toolbar.
-                        editorClassName={editorStyles} // classe aplicada em volta do editor
-                        toolbarClassName="mb-0" // classe aplicada em volta da toolbar
-                        readOnly={this.props.readOnly}                        
-                        onEditorStateChange={this.onEditorStateChange}     
-                        onContentStateChange={this.onContentStateChange}                   
-                    />
-                </div>
-            </div>
-        );
+            <Editor      
+                toolbarHidden={this.props.readOnly}
+                editorState={editorState}    
+                wrapperClassName={editorStyles} // classe aplicada em volta de todo o componente, ou seja, do editor e da toolbar.
+                editorClassName={textAreaStyles} // classe aplicada em volta do editor de texto
+                toolbarClassName="border border-bottom-0 mb-0 bg-light" // classe aplicada em volta da toolbar
+                readOnly={this.props.readOnly}                        
+                onEditorStateChange={this.onEditorStateChange}     
+                onContentStateChange={this.onContentStateChange}                   
+            />              
+        )
     }
 }

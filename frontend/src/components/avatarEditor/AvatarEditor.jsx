@@ -31,11 +31,8 @@ class AEditor extends React.Component {
 
   render() {
     console.log("avatarEditor montado")
-    if(!this.props.image || this.props.image === "DefImg") {
-      // rever se necessário esse return desse jeito
+    if(!this.props.image || this.props.image === "DefImg")       
       return <div className="modal fade" id="avatarModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true"></div>      
-    }
-
     
     return (
       <div className="d-flex flex-column">

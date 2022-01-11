@@ -191,11 +191,15 @@ export default class Article extends Component {
             })
         }
 
-        // se usuário não logado está tentando criar artigo redireciona pro '/' ou se o artigo não está publicado, não acessa.
+        // se usuário não logado. Se está tentando criar artigo redireciona pro '/' ou se o artigo não está publicado, não acessa.
         else { 
-            if(this.props.id === 'new' || this.state.article.published)  
+            if(this.props.id === 'new')  
                 this.setState({redir: true})
-            else this.setState({error: "Este artigo não está publicado.", validatingToken: false})
+            else { 
+                if(!this.state.article.published)
+                    this.setState({error: "Este artigo não está publicado."})
+                this.setState({validatingToken: false}) 
+            }
         }    
     }
 
@@ -360,7 +364,7 @@ export default class Article extends Component {
 
         let btnReadWrite = ""
         if(this.state.adminOrAuthor)
-            btnReadWrite = <p className="text-center"><button className="btn btn-primary my-2" onClick={e => this.toEditorMode()}>Editar artigo</button></p>
+            btnReadWrite = <p><button className="btn btn-primary my-2" onClick={e => this.toEditorMode()}>Editar artigo</button></p>
 
         // Lidando com as datas de publicação e atualização.
         let dateInfo = ""
@@ -454,17 +458,23 @@ export default class Article extends Component {
                 
                 <ArticleEditor content={this.state.temp.content} readOnly={this.state.readOnly} onContentStateChange={this.handleContentChange}/> 
 
-                <p className="mb-1">Publicar artigo?</p>
-                <input type="radio" id="isPublished" name="published" value="1" defaultChecked={this.state.temp.published} onChange={e => this.handleChange(e, e.target.name)}/>
-                <label htmlFor="published">Sim, publicar agora.</label><br />
-                <input type="radio" id="isNotPublished" name="published" value="0" defaultChecked={!this.state.temp.published} onChange={e => this.handleChange(e, e.target.name)}/>
-                <label htmlFor="notPublished">Não, publicarei depois.</label>
-                
-                <p>
-                    <button onClick={e => this.saveArticle()}>Salvar</button>
-                    <button onClick={e => this.discard()}>Descartar</button>
+                {/* Publicação */}
+                <p className="mb-2">Publicar artigo?</p>
+                <div className="form-check form-check-inline">
+                    <input className="form-check-input" type="radio" id="isPublished" name="published" value="1" defaultChecked={this.state.temp.published} onChange={e => this.handleChange(e, e.target.name)}/>
+                    <label className="form-check-label" htmlFor="published">Sim, publicar agora.</label>
+                </div>
+                <div className="form-check form-check-inline">
+                    <input className="form-check-input" type="radio" id="isNotPublished" name="published" value="0" defaultChecked={!this.state.temp.published} onChange={e => this.handleChange(e, e.target.name)}/>
+                    <label className="form-check-label" htmlFor="notPublished">Não, publicarei depois.</label>                    
+                </div>
+
+
+                <div className="mt-4">
+                    <button className="btn btn-success me-3" onClick={e => this.saveArticle()}>Salvar</button>
+                    <button className="btn btn-dark me-3" onClick={e => this.discard()}>Descartar</button>
                     {btnDeleteArticle}
-                </p>
+                </div>
 
                 {/* Modal da exclusão */}
                 <div className="modal fade" id="delArticleModal" tabIndex="-1" aria-labelledby="delArticleModalLabel" aria-hidden="true">
@@ -498,7 +508,7 @@ export default class Article extends Component {
 
         // loading
         if(this.state.loading || this.state.validatingToken) {            
-            return <div className="loading_div"><img src={loadingImg} className="loading_img"/></div>
+            return <div className="loading_div"><img src={loadingImg} alt="Carregando" className="loading_img"/></div>
         }
         
         

@@ -21,3 +21,15 @@ body {
     width: 150px;
     height: 150px;    
 }
+
+thead {
+    background-color: #4472C4;
+    color: #fff;
+}
+thead th:hover {
+    background-color: #7da4e8;
+    color: #222;
+}
+tbody tr:hover {
+    background-color: #DDEEFF;    
+}

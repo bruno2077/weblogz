@@ -1,9 +1,6 @@
 aside {    
-    padding: 5px 5px;
-    /* border-left: #b7c5d9 1px solid; */    
-    /* border-radius: 6px; */
-    background-color: #F1F3F5;
-    /* border: 1px solid #DDD;  */  
+    padding: 5px 5px;    
+    background-color: #F1F3F5;    
     font-family: 'Open sans', sans-serif;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -34,9 +31,7 @@ aside {
     color: #495057;
 }
 .aside-item li {
-    list-style: none; 
-    /* font-weight: 700;    */
-    /* font-size: 0.9rem; */    
+    list-style: none;       
     color: #7a7c80;
     margin-bottom: 8px;
 }

@@ -47,7 +47,7 @@ const Routes = props => {
                 </Route>
 
                 <Route exact path='/login'>
-                    <Login login={{...props.login}} user={{...props.user}}/>
+                    <Login login={{...props.login}} user={{...props.user}} categories={props.categories}/>
                 </Route>
 
                 <Route exact path='/perfil'>

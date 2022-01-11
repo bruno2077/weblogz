@@ -1,0 +1,9 @@
+.admArticles table {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .admArticles table {
+        font-size: 0.8rem;
+    }
+}

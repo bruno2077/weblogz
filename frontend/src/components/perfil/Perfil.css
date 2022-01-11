@@ -18,3 +18,17 @@
     cursor: default;
     box-shadow: 0 0 0px #777; 
 }
+
+.userdata {
+    max-width: 500px;
+}
+
+.perfil table {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .perfil table {
+        font-size: 0.8rem;
+    }
+}

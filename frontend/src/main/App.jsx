@@ -141,7 +141,7 @@ export default class App extends Component {
     
     render() {
         if(this.state.validatingToken || this.state.loading)
-            return <div className="loading_div"><img src={loadingImg} className="loading_img"/></div>
+            return <div className="loading_div"><img src={loadingImg} className="loading_img" alt="Carregando"/></div>
                 
         else {           
             return (
@@ -149,6 +149,7 @@ export default class App extends Component {
                     <Header 
                         user={ {get: this.state.user, set: this.handleUserChange} } 
                         login={ {register: this.state.regfix, setRegister: val => this.setState({regfix: val})} }
+                        categories={ {get: this.state.categories, update: this.getCategories} }
                     />
                     <Routes
                         login={ {get: this.state.isLogged, set: this.handleLoginChange, register: this.state.regfix, setReg: val => this.setState({regfix: val})  } } 

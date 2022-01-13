@@ -59,7 +59,8 @@ export default class ArticleEditor extends Component {
                 toolbarClassName="border border-bottom-0 mb-0 bg-light" // classe aplicada em volta da toolbar
                 readOnly={this.props.readOnly}                        
                 onEditorStateChange={this.onEditorStateChange}     
-                onContentStateChange={this.onContentStateChange}                   
+                onContentStateChange={this.onContentStateChange}   
+                stripPastedStyles={true}                
             />              
         )
     }

@@ -1,11 +1,11 @@
+// Esse componente carrega um editor de imagem de avatar usando o React Avatar Editor.
+
 import React from 'react'
 import ReactAvatarEditor from 'react-avatar-editor'
 
 class AEditor extends React.Component {
   constructor(props) {
-      super(props)
-      // this.setEditorRef = this.setEditorRef.bind(this)
-      // this.onClickSave = this.onClickSave.bind(this)
+      super(props)      
       this.imageURL = 0;
       this.state = {        
         scale: this.props.scale,        
@@ -19,7 +19,7 @@ class AEditor extends React.Component {
 
   onChangeSave = () => {
     if(this.editor) {
-      // Retorna um dataURL. Isso pode ir na src das <img> e pode ir pro SQL numa coluna bytea (binário)
+      // Retorna um dataURL (typeof String). Isso pode ir na src das <img> e pode ir pro SQL numa coluna bytea (binário)
       const data = this.editor.getImageScaledToCanvas().toDataURL();
       
       return data // dataURL base64

@@ -160,7 +160,7 @@ module.exports = app => {
         if(categoryById !== null) { //conta o numero de artigos da categoria escolhida, com ou sem pesquisa.
             if(req.query.q)
                 entries = await app.db('articles').where({categoryId: categoryById}).andWhere('title', 'like', `%${req.query.q}%`).andWhere({published: true}).count('id').first()
-            else entries = await app.db('articles').where({categoryId: categoryById}).count('id').first()
+            else entries = await app.db('articles').where({categoryId: categoryById}).andWhere({published: true}).count('id').first()
         }
         else { //conta numero de artigos no total, com ou sem pesquisa
             if(req.query.q)

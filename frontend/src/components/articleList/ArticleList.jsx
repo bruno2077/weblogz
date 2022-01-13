@@ -229,7 +229,7 @@ export default class ArticleList extends Component {
                     {/* Opções de paginação */}
                     <div className='d-flex flex-column flex-sm-row'>
                         {/* Combobox com 3 opções de Limit */}
-                        <div className='d-flex align-items-center mb-2'>
+                        <div className='d-flex align-items-center my-2'>
                             <span className='me-2'>Por página</span>
                             <select className="form-select form-select-sm me-4" name="limit" id="perpage" value={`${this.props.content.pagination.limit}`} onChange={e => this.handlePaginationChange(e, e.target.name)}>
                                 <option  value="3">3</option>
@@ -238,7 +238,7 @@ export default class ArticleList extends Component {
                             </select>
                         </div>
                         {/* combobox com 2 opções de ordenação. */}
-                        <div className='d-flex align-items-center mt-2'>
+                        <div className='d-flex align-items-center my-2'>
                             <span className='me-2'>Ordem</span>
                             <select className="form-select form-select-sm" name="recent" id="orderby" value={this.props.pagOptions.get.recent ? "1" : "0"} onChange={e => this.handlePaginationChange(e, e.target.name)}>
                                 <option  value="0">Data de publicação</option>

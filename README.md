@@ -1,24 +1,72 @@
-# Weblogz
-**Status do Projeto: Em construção.**
+<div align="center">
+    <img src="https://i.ibb.co/PzW2by6/logotry-light-v2.png" style="max-width: 400px;"alt="WEBLOGZ">
+</div>
+
+<div align="center">
+
+  <a href="https://bruno2077.github.io/">
+    <img alt="Made by Bruno2077" src="https://img.shields.io/badge/Feito%20por-Bruno2077-blueviolet">
+  </a>
+
+  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/bruno2077/weblogz.svg">
+
+  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/bruno2077/weblogz.svg">
+  
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/bruno2077/weblogz.svg">
+  
+  <a href="https://github.com/bruno2077/weblogz/commits/main">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/bruno2077/weblogz.svg">
+  </a>
+
+  <a href="https://github.com/bruno2077/weblogz/issues">
+    <img alt="Repository issues" src="https://img.shields.io/github/issues/bruno2077/weblogz.svg">
+  </a>
+
+  <img alt="License MIT" src="https://img.shields.io/github/license/bruno2077/weblogz.svg">
+</div>
+<hr>
+
+**Status do Projeto: Finalizado.**
 
 ## Descrição
-Weblogz é um blog multi autor com cadastro de usuários, artigos e categorias de artigos. No momento todas as funcionalidades estão prontas faltando apenas finalizar a parte visual (HTML/CSS/Bootstrap). O projeto está sendo desenvolvido com Node e Express no back-end e React.js no Front-end.
+Weblogz é um blog multi autor com cadastro de usuários, artigos e categorias de artigos. O projeto foi desenvolvido com Node, Express e PostgreSQL no back-end e React.js no Front-end.
+
+## Comentários
+Este foi um puta primeiro projeto de javascript/React.js, englobou tanto conhecimento front-end quanto back-end. Foram meses mas o projeto foi até o fim. Foram muitos conhecimentos adquiridos o projeto abrangeu cadastros, autenticação, permissões, rotas, componentização, e o mais importante a vivência de um projeto relativamente grande do início ao fim.
+
+O objetivo inicialmente era fazer um CRUD de usuários para aprender React e frizar tudo que já tinha sido estudado acerca de Javascript back-end, HTML e CSS mas a coisa cresceu, o que era pra ser um CRUD virou um blog multi autor completo, uma aplicação completa. Foi uma aula de desenvolvimento web fazer o Weblogz, foi um só projeto mas dezenas e dezenas de desafios, e hoje todos concluídos.
 
 ## Pré Requisitos
-Pra instalar todas as dependências, lidar com o banco de dados e executar o servidor back-end é necessário ter o Node.js(v14.17.6), o npm(6.14.15) e o Postgresql (13.3) instalados na máquina as versões entre parêntesis foram as utilizadas no projeto. O servidor roda na porta 3005. Para instalar e rodar o front-end é necessário o Node.js e o npm. O front-end roda na porta 3000.
+Pra instalar todas as dependências, lidar com o banco de dados e executar o servidor back-end é necessário ter o Node.js(v14.17.6), o npm (6.14.15) e o Postgresql (13.3) instalados na máquina as versões entre parêntesis foram as utilizadas no projeto. O servidor back-end roda na porta 3005. Para instalar e rodar o front-end também é necessário o Node.js e o npm. O front-end roda na porta 3000.
 
 ## Instalação
-### Back-end
-Instalada todas as dependências e utilizando o SGBD Postgresql, para rodar o servidor basta seguir os passos abaixo mas com outros SGBDs como MySQL algumas alterações devem ser necessárias.
+O repositório pode ser baixado com o [zip](https://github.com/bruno2077/weblogz/archive/refs/heads/main.zip) do repositório, com o [Github desktop](https://desktop.github.com/) ou com o [Git](https://git-scm.com).
 
-Para rodar o servidor:
-1- Crie um banco de dados no Postgresql
-2- Preencha o arquivo env_file com uma senha qualquer em authSecret, o nome do banco de dados criado, e o usuário e senha para acessá-lo
-3- Renomeie o arquivo env_file para .env
-4- Pronto. No terminal dentro de /backend execute o comando *npm start* pra executar o servidor.
+### Back-end
+1. A primeira coisa a fazer é criar um novo banco de dados no Postgresql;
+2. De dentro da pasta do repositório abra o arquivo *./backend/env_file* e preencha **authSecret** com uma senha qualquer. Preencha também os atributos de **db** com o nome do banco de dados criado, o usuário e senha. Salve e feche o arquivo.
+3. Renomeie então o arquivo *env_file* para *.env*
+
+Agora é só instalar e executar a aplicação. No terminal:
+```bash
+# abra o diretório do backend da aplicação
+$ cd backend
+# Instale as dependencias
+$ npm i
+# execute o backend na porta 3000
+$ npm start
+```
 
 ### Front-end
-Com o Node.js e o npm instalados na máquina basta executar um 'npm install' no console/terminal que todas as dependências serão instaladas.
+Abra outro terminal no diretório do repositório:
+```bash
+# abra o diretório do frontend da aplicação
+$ cd frontend
+# Instale as dependencias
+$ npm i
+# Execute o frontend na porta 3005
+$ npm start
+```
 
 ## Como usar
 Inicialmente, no back-end devemos criar um usuário administrador diretamente no Postgresql pois pelo nosso servidor somente um usuário administrador tem permissão para criar um usuário administrador. O esquema do usuário é o seguinte:
@@ -33,22 +81,20 @@ Inicialmente, no back-end devemos criar um usuário administrador diretamente no
  admin     | boolean                  | not null | false
  deletedAt | timestamp with time zone |          |</pre>
 
-Criado um usuário administrador no back-end já podemos logar com ele no front-end e ter acesso a toda a aplicação. O usuário administrador pode criar outros usuários administradores ou não, alterar seu próprio usuário, excluir qualquer usuário inclusive a si próprio mas é recomendado sempre ter ao menos um usuário administrador caso contrário só pelo SGBD será possível criar um usuário administrador. Pela URL pública de cadastro só são criados usuários comuns.
+Supondo que o nome do banco de dados criado seja *weblogz* um usuário poderia ser criado no Postgresql com o comando:
+```sql
+INSERT INTO weblogz(name, email, password, admin) VALUES (super, super@y.br, 1234, true);
+```
 
-Usuários administradores também tem acesso a página de administração de usuários, artigos e categorias de artigos, onde todos estes dados são listados. Administradores podem alterar, criar, e excluir qualquer usuário, artigo ou categoria de artigo mas uma categoria de artigo só pode ser removida se esta não contém nenhum artigo nela. Artigos podem ser modificados, excluídos ou despublicados mas a autoria do artigo é sempre do usuário que o criou. Um usuário também só pode ser removido se não tem nenhum artigo em seu nome.
+Criado um usuário administrador no back-end já podemos logar com ele no front-end e ter acesso a toda a aplicação. O usuário administrador pode criar "CRUDar" usuários, artigos e categorias de artigos, pode inclusive deletar a si próprio mas é recomendado sempre ter ao menos um usuário administrador caso contrário só pelo SGBD será possível criar um usuário administrador. Pela URL pública de cadastro de usuários só são criados usuários comuns.
 
-Usuários não cadastrados tem acesso somente leitura a todos os artigos publicados. Usuários comuns cadastrados além de terem acesso a todos os artigos publicados têm também a página /perfil onde eles podem editar seu próprio cadastro e ver, editar e excluir os artigos de sua autoria publicados ou não. Os artigos são ou não publicados no momento da criação onde podem serem salvos como rascunho ou salvos como já publicado.
+Um usuário só pode ser removido se este não tiver nenhum artigo cadastrado (publicado ou não), é necessário remover os seus artigos para excluí-lo. Categorias de artigos também só podem ser excluídas se não tiver nenhum artigo cadastrado nela. Os artigos podem mudar de categoria mas não podem mudar de autor. 
+
+Usuários não cadastrados tem acesso somente leitura a todos os artigos publicados. Qualquer usuário cadastrado pode criar um artigo, mas somente o autor de um artigo ou um usuário administrador podem editá-lo.
 
 
-## Screenshots
-<h4>Introdução</h4>
-<a href="./screenshots/introduction.gif"><img alt="Introdução" width="400" src="./screenshots/introduction.gif"></a>
+## Screenshots (clique para ver mais)
 
-<h4>Perfil de usuário</h4>
-<a href="./screenshots/profile.gif"><img alt="Perfil" width="400" src="./screenshots/profile.gif"></a>
-
-<h4>CRUD de usuário</h4>
-<a href="./screenshots/crud.gif"><img alt="CRUD de usuário" width="400" src="./screenshots/crud.gif"></a>
 
 ## Tecnologias
 As seguintes ferramentas foram usadas na construção do projeto:

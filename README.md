@@ -26,15 +26,10 @@
 </div>
 <hr>
 
-**Status do Projeto: Finalizado.**
+> **Status do Projeto: Concluído** :heavy_check_mark:
 
 ## Descrição
 Weblogz é um blog multi autor com cadastro de usuários, artigos e categorias de artigos. O projeto foi desenvolvido com Node, Express e PostgreSQL no back-end e React.js no Front-end.
-
-## Comentários
-Este foi um puta primeiro projeto de javascript/React.js, englobou tanto conhecimento front-end quanto back-end. Foram meses mas o projeto foi até o fim. Foram muitos conhecimentos adquiridos o projeto abrangeu cadastros, autenticação, permissões, rotas, componentização, e o mais importante a vivência de um projeto relativamente grande do início ao fim.
-
-O objetivo inicialmente era fazer um CRUD de usuários para aprender React e frizar tudo que já tinha sido estudado acerca de Javascript back-end, HTML e CSS mas a coisa cresceu, o que era pra ser um CRUD virou um blog multi autor completo, uma aplicação completa. Foi uma aula de desenvolvimento web fazer o Weblogz, foi um só projeto mas dezenas e dezenas de desafios, e hoje todos concluídos.
 
 ## Pré Requisitos
 Pra instalar todas as dependências, lidar com o banco de dados e executar o servidor back-end é necessário ter o Node.js(v14.17.6), o npm (6.14.15) e o Postgresql (13.3) instalados na máquina as versões entre parêntesis foram as utilizadas no projeto. O servidor back-end roda na porta 3005. Para instalar e rodar o front-end também é necessário o Node.js e o npm. O front-end roda na porta 3000.
@@ -94,7 +89,30 @@ Usuários não cadastrados tem acesso somente leitura a todos os artigos publica
 
 
 ## Screenshots (clique para ver mais)
+A seguir temos imagens de uma demo do site já com vários artigos, categorias de artigos e usuários cadastrados. Clique nas imagens para ver mais.
 
+**Página principal - Lista dos artigos mais recentes<br/>**
+<a href="https://webmshare.com/play/9x58D">
+  <img src="https://i.ibb.co/48dWpvj/Home.gif" alt="Home Page" style="border: 1px solid #999;">
+</a>
+
+**Login e cadastro público de usuário<br/>**
+<a href="https://webmshare.com/play/N7X3N">
+  <img src="https://i.ibb.co/8zZSF2z/Login-Register.gif" alt="Sign in Sign up" style="border: 1px solid #999;">
+</a>
+
+**Artigos e categorias de artigos<br/>**
+<a href="https://webmshare.com/play/zOo5K">
+  <img src="https://i.ibb.co/yFRJ5d6/articles.gif" alt="Páginas de artigos e categorias de artigos" style="border: 1px solid #999;">
+</a>
+
+**Administração<br/>**
+<a href="https://webmshare.com/play/y13PX">
+  <img src="https://i.ibb.co/592z1fr/adm-pages.gif" alt="Páginas administrativas" style="border: 1px solid #999;">
+</a>
+
+**Responsividade**<br/>
+<img src="https://i.ibb.co/SfYTWKc/mobile-phone.gif" alt="Responsividade">
 
 ## Tecnologias
 As seguintes ferramentas foram usadas na construção do projeto:

@@ -29,7 +29,7 @@
 > **Status do Projeto: Concluído** :heavy_check_mark:
 
 ## Descrição
-Weblogz é um blog multi autor com cadastro de usuários, artigos e categorias de artigos. O projeto foi desenvolvido com Node, Express e PostgreSQL no back-end e React.js no Front-end. Confira a demo do projeto clicando [aqui](https://weblogz-br.herokuapp.com/).
+Weblogz é um blog multi autor com cadastro de usuários, artigos e categorias de artigos. O projeto foi desenvolvido com Node, Express e PostgreSQL no back-end e React.js no Front-end. Confira a demo do projeto clicando [aqui](https://weblogz.netlify.app).
 
 ## Pré Requisitos
 Pra instalar todas as dependências, lidar com o banco de dados e executar o servidor back-end é necessário ter o Node.js(v14.17.6), o npm (6.14.15) e o Postgresql (13.3) instalados na máquina as versões entre parêntesis foram as utilizadas no projeto. O servidor back-end roda na porta 3005. Para instalar e rodar o front-end também é necessário o Node.js e o npm. O front-end roda na porta 3000.
@@ -89,7 +89,7 @@ Usuários não cadastrados tem acesso somente leitura a todos os artigos publica
 
 
 ## Screenshots (clique para ver mais)
-A seguir temos imagens da [demo](https://weblogz-br.herokuapp.com/) do site já com vários artigos, categorias de artigos e usuários cadastrados. Clique nas imagens para ver mais.
+A seguir temos imagens da [demo](https://weblogz.netlify.app/) do site já com vários artigos, categorias de artigos e usuários cadastrados. Clique nas imagens para ver mais.
 
 **Página principal - Lista dos artigos mais recentes<br/>**
 <a href="https://webmshare.com/play/9x58D">
